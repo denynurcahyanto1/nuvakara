@@ -10,7 +10,7 @@ describe('Template Registry', () => {
     expect(component).toBeDefined();
   });
 
-  it('should have empty registry initially', () => {
-    expect(Object.keys(registry)).toHaveLength(0);
+  it('should have 4 templates in registry', () => {
+    expect(Object.keys(registry)).toHaveLength(4);
   });
 });

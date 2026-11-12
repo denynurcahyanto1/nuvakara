@@ -1,4 +1,8 @@
 import React from 'react';
+import { WeddingClassic } from './wedding-classic';
+import { BirthdayCelebration } from './birthday-celebration';
+import { BabyShower } from './baby-shower';
+import { GraduationModern } from './graduation-modern';
 
 export interface TemplateComponentProps {
   data: Record<string, unknown>;
@@ -16,7 +20,12 @@ const FallbackRenderer: TemplateRenderer = () => {
   return React.createElement('div', null, 'Template not found');
 };
 
-export const registry: Record<string, TemplateMetadata> = {};
+export const registry: Record<string, TemplateMetadata> = {
+  'wedding-classic': { slug: 'wedding-classic', name: 'Wedding Classic', renderer: WeddingClassic },
+  'birthday-celebration': { slug: 'birthday-celebration', name: 'Birthday Celebration', renderer: BirthdayCelebration },
+  'baby-shower': { slug: 'baby-shower', name: 'Baby Shower', renderer: BabyShower },
+  'graduation-modern': { slug: 'graduation-modern', name: 'Graduation Modern', renderer: GraduationModern },
+};
 
 export const getRenderer = (slug: string): TemplateRenderer => {
   return registry[slug]?.renderer || FallbackRenderer;
