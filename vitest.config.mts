@@ -9,6 +9,7 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom",
+    pool: "vmThreads",
     setupFiles: ["./src/tests/setup.ts"],
     globals: true,
   },
