@@ -1,9 +1,11 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
+import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 export interface FloatingDecorProps {
+  children?: ReactNode;
   className?: string;
   delay?: number;
   /** Vertical travel in pixels. */
@@ -12,6 +14,7 @@ export interface FloatingDecorProps {
 
 /** Decorative ornament that gently floats. Hidden from assistive technology. */
 export function FloatingDecor({
+  children,
   className,
   delay = 0,
   amplitude = 12,
@@ -32,6 +35,8 @@ export function FloatingDecor({
           ? undefined
           : { duration: 7, repeat: Infinity, ease: "easeInOut", delay }
       }
-    />
+    >
+      {children}
+    </motion.div>
   );
 }

@@ -82,7 +82,7 @@ export const siteConfig = {
     },
     {
       id: "whatsapp",
-      title: "Bagikan via WhatsApp",
+      title: "Bagikan undangan melalui WhatsApp",
       description:
         "Kirim tautan undangan ke grup WhatsApp dalam satu ketukan, lengkap dengan pesan siap kirim.",
       icon: "whatsapp",
