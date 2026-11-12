@@ -109,6 +109,12 @@
     height: 100dvh;
   }
 
+  /* Ambient background blob. CSS-driven so it never blocks the main thread. */
+  .orb-drift {
+    animation: orb-drift 18s ease-in-out infinite;
+    will-change: transform;
+  }
+
   /* Keeps sticky bottom UI clear of the iOS home indicator. */
   .safe-bottom {
     padding-bottom: env(safe-area-inset-bottom);
@@ -119,6 +125,16 @@
     .hover-lift:hover {
       transform: translateY(-4px);
     }
+  }
+}
+
+@keyframes orb-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(2%, -3%, 0) scale(1.08);
   }
 }
 
