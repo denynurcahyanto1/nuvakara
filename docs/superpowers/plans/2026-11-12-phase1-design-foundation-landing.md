@@ -53,12 +53,12 @@ Mayoritas pengguna NUVAKARA ada di ponsel. Semua yang dibangun di plan ini **mob
 | Breakpoint | Tailwind default: `sm:640` · `md:768` · `lg:1024` · `xl:1280`. **Komponen ditulis mobile-first** — gaya dasar = tampilan ponsel, `sm:`/`md:`/`lg:` menambah |
 | Target sentuh | Semua elemen interaktif **minimal 44×44px** (tombol, link, icon button, item menu, pilihan chip) |
 | Tipografi | `text-base` (16px) pada semua input — di bawah 16px iOS auto-zoom saat fokus dan merusak layout |
-| Hover | Semua efek hover dibungkus `@media (hover: hover)` — di perangkat sentuh, hover tidak boleh jadi satu-satunya caraDiscover konten |
+| Hover | Semua efek hover dibungkus `@media (hover: hover)` — di perangkat sentuh, hover tidak boleh jadi satu-satunya cara menemukan konten |
 | Viewport | Tinggi memakai `100dvh` (bukan `100vh`) agar tidak tertutup chrome browser mobile |
 | Safe area | Elemen menempel bawah memakai `padding-bottom: env(safe-area-inset-bottom)` (notch/home indicator iOS) |
 | Gambar | `next/image` **wajib** menyertakan `sizes` yang akurat; aset berat (lockup 1400px) hanya dimuat di `lg:` ke atas |
 | Menu | Drawer mobile = sheet full-height yang bisa di-scroll, dengan tombol tutup besar di kanan atas |
-| Form | Input full-width, label selalu terlihat (bukan placeholder-as-label), pesan error贴近 input |
+| Form | Input full-width, label selalu terlihat (bukan placeholder-as-label), pesan error dekat input |
 | CTA | Tombol utama full-width di mobile (`w-full sm:w-auto`) |
 | Data | Tidak ada data weighty di bawah fold; section bawah lazily dimount |
 
@@ -279,7 +279,7 @@ Rewrite `src/app/globals.css`:
 - `input, textarea, select { font-size: 16px; }` — mencegah iOS auto-zoom
 - `prefers-reduced-motion: reduce` → `*, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }`
 
-Rewrite `src/app/layout.tsx`: `import { Cormorant_Garamond, Plus_Jakarta_Sans } from "next/font/google"` dengan `variable: "--font-cormorant"` / `"--font-jakarta"`, `subsets: ["latin"]`, `display: "swap"`; `metadata` berisi `title: { default: "NUVAKARA — Every Moment Deserves a Beautiful Invitation.", template: "%s | NUVAKARA" }`, `description`, `metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000")`, `applicationName: "NUVAKARA"`, `openGraph.type: "website"`, `icons` menunjuk ke file app icon.
+Rewrite `src/app/layout.tsx`: `import { Cormorant_Garamond, Plus_Jakarta_Sans } from "next/font/google"` dengan `variable: "--font-cormorant"` / `"--font-jakarta"`, `subsets: ["latin"]`, `display: "swap"`; `metadata` berisi `title: { default: "NUVAKARA — Every Moment Deserves a Beautiful Invitation.", template: "%s | NUVAKARA" }`, `description`, `metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http:/localhost:3000")`, `applicationName: "NUVAKARA"`, `openGraph.type: "website"`, `icons` menunjuk ke file app icon.
 
 - [ ] **Step 8: Setup vitest**
 
@@ -481,6 +481,8 @@ git commit -m "feat: reusable UI primitives"
 
 ## Task 3: Sistem Animasi
 
+> **Catatan eksekusi (13 Nov 2026):** task ini dieksekusi dengan **GSAP 3.15**, bukan Motion seperti tertulis di bawah — lihat bagian `Global Constraints` dan ledger Phase 1 untuk alasan dan keputusannya. Langkah di bawah mempertahankan rancangan awal sebagai rujukan.
+
 **Files:**
 - Create: `src/components/motion/{Reveal,TextReveal,Parallax,Counter,FloatingDecor,GradientOrb,Stagger,PageTransition,MagneticButton,GradientText,index}.tsx`
 - Create: `src/app/template.tsx`
@@ -533,7 +535,7 @@ describe("motion primitives", () => {
   > Wajib: `once` di dalam `viewport`, bukan prop top-level.
 - `Counter`: `useInView` + `requestAnimationFrame` untuk menghitung dari 0 → `to`; bila `useReducedMotion() === true` tampilkan nilai akhir langsung.
 - `TextReveal`: pecah `text` per kata, render `<span className="inline-block">` per kata dengan `motion.span` stagger 0.04s, `aria-label={text}` pada wrapper agar screen reader membaca utuh.
-- `Parallax`: `useScroll({ target: ref, offset: ["start end", "end start"] })` + `useTransform(scrollYProgress, [0, 1], [distance, -distance])`; `distance = speed * 100`; nonaktif bila `useReducedMotion()` true atau lebar viewport < 768 (pakai `useMediaQuery` custom hook基于 `window.matchMedia`).
+- `Parallax`: `useScroll({ target: ref, offset: ["start end", "end start"] })` + `useTransform(scrollYProgress, [0, 1], [distance, -distance])`; `distance = speed * 100`; nonaktif bila `useReducedMotion()` true atau lebar viewport < 768 (pakai `useMediaQuery` custom hook `window.matchMedia`).
 - `FloatingDecor`: `motion.div` dengan `animate={{ y: [0, -amplitude, 0] }}`, `transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay }}`; `useReducedMotion()` → tanpa animasi.
 - `GradientOrb`: `div` dengan `background: radial-gradient(...)`, `filter: blur(60px)`, `aria-hidden`, animasi lewat CSS `@keyframes` di `globals.css` (bukan JS) agar ringan.
 - `Stagger`: `motion.div` `variants={{ show: { transition: { staggerChildren: gap } } }}` + children `motion.div` `variants={{ hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0 } }}`.
@@ -778,7 +780,7 @@ Buat `src/lib/supabase/client.ts` — `createBrowserClient`/plain `createClient`
 
 - [ ] **Step 5: Jalankan dev server & verifikasi manual**
 
-Run: `npm run dev` (background), buka `http://localhost:3000`.
+Run: `npm run dev` (background), buka `http:/localhost:3000`.
 Expected: landing tampil; `/harga` menampilkan empty state (tabel belum ada) **tanpa** error; `/privasi` & `/ketentuan` berisi teks nyata.
 
 - [ ] **Step 6: Cek responsif (mobile-first)**
@@ -795,7 +797,7 @@ Expected: semua benar. Catat hasil aktual di checklist QA Task 6.
 
 - [ ] **Step 6b: Cek performa mobile**
 
-Run: `npm run build`, lalu `npm run start` dan ukur dengan DevTools (Network → Slow 3G, throttling 400kbps) pada `http://localhost:3000`:
+Run: `npm run build`, lalu `npm run start` dan ukur dengan DevTools (Network → Slow 3G, throttling 400kbps) pada `http:/localhost:3000`:
 - LCP < 3 detik, First Contentful Paint < 1.8 detik.
 - Tidak ada request gambar > 150KB di viewport 375px.
 Expected: sesuai. Jika LCP gagal, culprit biasanya `next/image` tanpa `sizes` atau font yang memblokir render — perbaiki di task yang memiliki aset tersebut.

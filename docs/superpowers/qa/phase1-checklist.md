@@ -5,7 +5,7 @@ Branch: `feature/phase1-design-foundation`
 Library animasi: **GSAP 3.15** (`gsap` + `@gsap/react`) — menggantikan Motion 14 pada 12 Nov 2026
 Plan: `docs/superpowers/plans/2026-11-12-phase1-design-foundation-landing.md`
 
-Semua angka di bawah adalah hasil pengukuran nyata, bukan estimasi.，环境 yang dipakai:
+Semua angka di bawah adalah hasil pengukuran nyata, bukan estimasi.. Lingkungan yang dipakai:
 `npm run build` → `npm run start -p 3200` (build produksi), browser Chromium in-app.
 
 ---
@@ -29,7 +29,7 @@ Semua angka di bawah adalah hasil pengukuran nyata, bukan estimasi.，环境 yan
 
 | # | Kondisi | Test / cara ukur | Hasil |
 |---|---|---|---|
-| 1 | **Pengguna di HP Android kelas bawah, koneksi 3G, dibuka dari WhatsApp** | LCP/FCP di build produksi; audit transfer | ✅ LCP **440 ms**, FCP **440 ms**, DOMContentLoaded **350 ms**, total transfer **277 KB** (15 resource, 195 KB script). Tidak ada gambar > 60 KB: `nuvakara-mark.png` (351 KB) dioptimasi `next/image` jadi **1 KB & 6 KB** varian. ⚠️ Diukur tanpa throttling (localhost); pada 3G nyata tambahkan ±2–3 s untuk 277 KB. |
+| 1 | **Pengguna di HP Android kelas bawah, koneksi 3G, dibuka dari WhatsApp** | LCP/FCP di build produksi; audit transfer | ✅ LCP **440 ms**, FCP **440 ms**, DOMContentLoaded **350 ms**, total transfer **277 KB** (15 resource, 195 KB script). Tidak ada gambar > 60 KB: `nuvakara-mark.png` (351 KB) dioptimasi `next/image` jadi **1 KB & 6 KB** varian. ⚠ Diukur tanpa throttling (localhost); pada 3G nyata tambahkan ±2–3 s untuk 277 KB. |
 | 3 | **Navigasi keyboard** | Drawer mobile + unit test Modal | ✅ Toggle **44×44 px**; drawer terbuka → `aria-expanded="true"`, body scroll terkunci; **Escape** menutup → `aria-expanded="false"`, scroll dilepas, **fokus kembali ke tombol toggle**. Modal: unit test mengunci Escape, backdrop click, dan focus masuk ke dialog (`tests/components/ui/Modal.test.tsx`). |
 | 4 | **`prefers-reduced-motion: reduce`** | `tests/components/motion/reduced-motion.test.tsx` (file terpisah, isolation modul Vitest) | ✅ 3 test hijau: Counter tampil di nilai akhir, Reveal tetap menampilkan konten utuh (tidak stuck `opacity:0`), TextReveal tanpa pemecahan kata. CSS global juga mematikan animasi via `@media (prefers-reduced-motion: reduce)`. |
 | 5 | **Konten panjang / ekstrem** | Injeksi judul 70 karakter + audit lebar | ✅ Injeksi judul panjang → `scrollWidth - clientWidth` tetap **0**; elemen terlebar 565 px < viewport 580 px. |
