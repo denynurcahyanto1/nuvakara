@@ -1,5 +1,10 @@
 /** Shared UI-level types. Database-shaped records live in `lib/dal`. */
 
+/** Result of an auth server action, rendered by `AuthForm`. */
+export type AuthActionState =
+  | { ok: true; checkEmail?: boolean }
+  | { ok: false; error: string; fields?: Record<string, string> };
+
 export interface Feature {
   id: string;
   title: string;

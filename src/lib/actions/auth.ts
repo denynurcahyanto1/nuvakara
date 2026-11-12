@@ -10,10 +10,7 @@ import {
   registerSchema,
   resetPasswordSchema,
 } from "@/lib/validation/auth";
-
-export type AuthActionState =
-  | { ok: true; checkEmail?: boolean }
-  | { ok: false; error: string; fields?: Record<string, string> };
+import type { AuthActionState } from "@/lib/types";
 
 /**
  * Only internal paths may be used as a post-login destination — an absolute

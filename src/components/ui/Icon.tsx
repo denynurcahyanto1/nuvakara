@@ -20,7 +20,9 @@ export type IconName =
   | "instagram"
   | "tiktok"
   | "linkedin"
-  | "check";
+  | "check"
+  | "eye"
+  | "eye-off";
 
 const paths: Record<IconName, string[]> = {
   invitation: [
@@ -97,6 +99,14 @@ const paths: Record<IconName, string[]> = {
     "M10 9v9",
   ],
   check: ["m5 13 4 4L19 7"],
+  eye: [
+    "M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z",
+    "M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",
+  ],
+  "eye-off": [
+    "M4 4l16 16",
+    "M9.9 5.2A9.9 9.9 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.3 7.8A17 17 0 0 0 2 12s3.5 7 10 7a9.8 9.8 0 0 0 4-.8",
+  ],
 };
 
 export interface IconProps extends SVGProps<SVGSVGElement> {
