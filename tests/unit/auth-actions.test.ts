@@ -15,7 +15,7 @@ import {
   registerSchema,
   resetPasswordSchema,
 } from "@/lib/validation/auth";
-import { safeNextPath } from "@/lib/actions/auth";
+import { safeNextPath } from "@/lib/utils";
 
 function formData(values: Record<string, string>) {
   const data = new FormData();

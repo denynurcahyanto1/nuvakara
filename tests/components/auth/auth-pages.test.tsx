@@ -99,7 +99,9 @@ describe("auth pages", () => {
   ];
 
   it.each(pages)("%s memakai form auth", (page) => {
-    expect(read(page)).toMatch(/AuthForm|RecoveryForm/);
+    expect(read(page)).toMatch(
+      /AuthForm|LoginForm|RegisterForm|ForgotPasswordForm|RecoveryForm/,
+    );
   });
 
   it("halaman reset password memakai RecoveryForm (memproses tautan pemulihan)", () => {

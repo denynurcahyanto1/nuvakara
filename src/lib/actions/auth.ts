@@ -11,17 +11,7 @@ import {
   resetPasswordSchema,
 } from "@/lib/validation/auth";
 import type { AuthActionState } from "@/lib/types";
-
-/**
- * Only internal paths may be used as a post-login destination — an absolute
- * URL would let a crafted link bounce the visitor to another site.
- */
-export function safeNextPath(value: string | null | undefined): string | null {
-  if (!value) return null;
-  if (!value.startsWith("/")) return null;
-  if (value.startsWith("//") || value.startsWith("/\\")) return null;
-  return value;
-}
+import { safeNextPath } from "@/lib/utils";
 
 function siteUrl(): string {
   return process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";

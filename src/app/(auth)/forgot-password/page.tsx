@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AuthForm } from "@/components/auth/AuthForm";
 import { AuthShell } from "@/components/auth/AuthShell";
-import { Input } from "@/components/ui/Input";
-import { forgotPasswordAction } from "@/lib/actions/auth";
+import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
 
 export const metadata: Metadata = {
   title: "Lupa kata sandi",
@@ -27,22 +25,7 @@ export default function ForgotPasswordPage() {
         </p>
       }
     >
-      <AuthForm
-        action={forgotPasswordAction}
-        submitLabel="Kirim tautan pemulihan"
-        successMessage="Jika email tersebut terdaftar, tautan pemulihan sudah dikirim. Silakan cek kotak masuk Anda."
-      >
-        {(fields) => (
-          <Input
-            name="email"
-            type="email"
-            label="Email"
-            autoComplete="email"
-            placeholder="nama@email.com"
-            error={fields.email}
-          />
-        )}
-      </AuthForm>
+      <ForgotPasswordForm />
     </AuthShell>
   );
 }

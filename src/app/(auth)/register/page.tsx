@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { AuthForm } from "@/components/auth/AuthForm";
 import { AuthShell } from "@/components/auth/AuthShell";
-import { PasswordField } from "@/components/auth/PasswordField";
-import { Input } from "@/components/ui/Input";
-import { registerAction } from "@/lib/actions/auth";
+import { RegisterForm } from "@/components/auth/RegisterForm";
 import { getUser } from "@/lib/dal/auth";
 
 export const metadata: Metadata = {
@@ -54,41 +51,7 @@ export default async function RegisterPage({
         </p>
       }
     >
-      <AuthForm action={registerAction} submitLabel="Daftar">
-        {(fields) => (
-          <>
-            <input type="hidden" name="next" value={next} />
-            <Input
-              name="fullName"
-              label="Nama lengkap"
-              autoComplete="name"
-              placeholder="Nama Anda"
-              error={fields.fullName}
-            />
-            <Input
-              name="email"
-              type="email"
-              label="Email"
-              autoComplete="email"
-              placeholder="nama@email.com"
-              error={fields.email}
-            />
-            <PasswordField
-              name="password"
-              label="Kata sandi"
-              autoComplete="new-password"
-              hint="Minimal 8 karakter, mengandung huruf dan angka."
-              error={fields.password}
-            />
-            <PasswordField
-              name="confirmPassword"
-              label="Konfirmasi kata sandi"
-              autoComplete="new-password"
-              error={fields.confirmPassword}
-            />
-          </>
-        )}
-      </AuthForm>
+      <RegisterForm next={next} />
     </AuthShell>
   );
 }

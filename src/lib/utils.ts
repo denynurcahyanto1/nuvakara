@@ -27,6 +27,17 @@ export function formatCurrency(value: number, currency = "IDR"): string {
   }).format(value);
 }
 
+/**
+ * Only internal paths may be used as a post-login destination — an absolute
+ * URL would let a crafted link bounce the visitor to another site.
+ */
+export function safeNextPath(value: string | null | undefined): string | null {
+  if (!value) return null;
+  if (!value.startsWith("/")) return null;
+  if (value.startsWith("//") || value.startsWith("/\\")) return null;
+  return value;
+}
+
 /** Locale-aware short date, e.g. "12 Nov 2026". */
 export function formatDate(value: Date | string, locale = "id-ID"): string {
   const date = typeof value === "string" ? new Date(value) : value;

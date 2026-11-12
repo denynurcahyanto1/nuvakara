@@ -40,6 +40,35 @@ export const registerSchema = z
 
 export const forgotPasswordSchema = z.object({ email: emailSchema });
 
+export const profileSchema = z.object({
+  fullName: z
+    .string({ error: "Nama wajib diisi." })
+    .trim()
+    .min(2, "Nama minimal 2 karakter.")
+    .max(80, "Nama terlalu panjang."),
+  phone: z
+    .string()
+    .trim()
+    .max(24, "Nomor telepon terlalu panjang.")
+    .refine(
+      (value) => value === "" || /^[0-9+\-\s()]+$/.test(value),
+      "Nomor telepon hanya boleh berisi angka.",
+    ),
+  timezone: z
+    .string()
+    .trim()
+    .min(1, "Zona waktu wajib diisi.")
+    .max(64, "Zona waktu tidak valid."),
+  avatarUrl: z
+    .string()
+    .trim()
+    .max(500, "URL foto profil terlalu panjang.")
+    .refine(
+      (value) => value === "" || /^https?:\/\//i.test(value),
+      "URL foto profil harus diawali http:// atau https://",
+    ),
+});
+
 export const resetPasswordSchema = z
   .object({
     password: passwordSchema,

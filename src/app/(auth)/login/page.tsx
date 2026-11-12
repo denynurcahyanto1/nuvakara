@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { AuthForm } from "@/components/auth/AuthForm";
 import { AuthShell } from "@/components/auth/AuthShell";
-import { PasswordField } from "@/components/auth/PasswordField";
-import { Input } from "@/components/ui/Input";
-import { loginAction } from "@/lib/actions/auth";
+import { LoginForm } from "@/components/auth/LoginForm";
 import { getUser } from "@/lib/dal/auth";
 
 export const metadata: Metadata = {
@@ -81,27 +78,7 @@ export default async function LoginPage({
         </p>
       ) : null}
 
-      <AuthForm action={loginAction} submitLabel="Masuk">
-        {(fields) => (
-          <>
-            <input type="hidden" name="next" value={next} />
-            <Input
-              name="email"
-              type="email"
-              label="Email"
-              autoComplete="email"
-              placeholder="nama@email.com"
-              error={fields.email}
-            />
-            <PasswordField
-              name="password"
-              label="Kata sandi"
-              autoComplete="current-password"
-              error={fields.password}
-            />
-          </>
-        )}
-      </AuthForm>
+      <LoginForm next={next} />
     </AuthShell>
   );
 }
