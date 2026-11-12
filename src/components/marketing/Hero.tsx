@@ -20,7 +20,7 @@ export function Hero() {
       <div className="container-page relative z-10 flex flex-col items-center gap-10 text-center lg:flex-row lg:items-center lg:justify-between lg:text-left">
         <div className="flex max-w-2xl flex-col items-center gap-6 lg:items-start">
           <Reveal>
-            <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-white/70 px-4 py-2 text-xs font-medium tracking-[0.2em] text-gold uppercase backdrop-blur">
+            <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-white/70 px-4 py-2 text-xs font-medium tracking-[0.2em] text-gold-deep uppercase backdrop-blur">
               Platform undangan digital premium
             </span>
           </Reveal>
@@ -71,7 +71,7 @@ export function Hero() {
             </FloatingDecor>
 
             <div className="absolute inset-x-6 top-10 rounded-[var(--radius-card)] border border-navy/10 bg-white/90 p-6 shadow-[var(--shadow-soft)] backdrop-blur">
-              <p className="text-xs tracking-[0.3em] text-gold uppercase">
+              <p className="text-xs tracking-[0.3em] text-gold-deep uppercase">
                 The Wedding Of
               </p>
               <p className="mt-2 font-display text-3xl text-navy">Rafi &amp; Aisyah</p>

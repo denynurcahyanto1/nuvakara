@@ -10,14 +10,15 @@ export function HowItWorks() {
           <SectionHeading
             eyebrow="Cara Kerja"
             title="Lima langkah, siap dalam lima menit"
-            description="Tanpa tooling desain, tanpa installment aplikasi yang rumit."
+            description="Tanpa software desain yang rumit, tanpa langkah yang membuat Anda kewalahan."
+            tone="dark"
           />
         </Reveal>
 
         <ol className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
           {siteConfig.howItWorks.map((item, index) => (
-            <Reveal key={item.step} delay={index * 0.08}>
-              <li className="flex h-full flex-col gap-3 border-t border-gold/40 pt-5">
+            <Reveal key={item.step} as="li" delay={index * 0.08}>
+              <div className="flex h-full flex-col gap-3 border-t border-gold/40 pt-5">
                 <span className="font-display text-3xl text-gold">
                   {item.step}
                 </span>
@@ -25,7 +26,7 @@ export function HowItWorks() {
                 <p className="text-sm leading-relaxed text-ivory/70">
                   {item.description}
                 </p>
-              </li>
+              </div>
             </Reveal>
           ))}
         </ol>

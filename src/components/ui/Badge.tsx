@@ -5,7 +5,7 @@ type Variant = "default" | "premium" | "success" | "danger" | "muted";
 
 const variantClasses: Record<Variant, string> = {
   default: "bg-navy/8 text-navy",
-  premium: "bg-gold/20 text-gold",
+  premium: "bg-gold/20 text-gold-deep",
   success: "bg-emerald-100 text-emerald-800",
   danger: "bg-red-100 text-red-800",
   muted: "bg-navy/5 text-muted",

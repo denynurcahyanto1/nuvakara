@@ -28,7 +28,7 @@ export const siteConfig = {
       id: "premium-templates",
       title: "Berbagai template premium",
       description:
-        "Empat template dengan karakter visual berbeda — elegance, celebratory, tender, dan modern.",
+        "Empat template dengan karakter visual berbeda — elegan, meriah, lembut, dan modern.",
       icon: "templates",
     },
     {
@@ -77,7 +77,7 @@ export const siteConfig = {
       id: "analytics",
       title: "Statistik pengunjung",
       description:
-        "Pantau jumlah pengunjung, sumber traffic, dan reconfirmasi kehadiran lewat dasbor.",
+        "Pantau jumlah pengunjung, sumber traffic, dan konfirmasi kehadiran lewat dasbor.",
       icon: "analytics",
     },
     {

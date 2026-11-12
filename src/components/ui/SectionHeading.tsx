@@ -6,6 +6,11 @@ export interface SectionHeadingProps {
   title: string;
   description?: string;
   align?: "left" | "center";
+  /**
+   * "light" for light surfaces (navy title, deep gold eyebrow).
+   * "dark" for dark surfaces such as the navy sections (ivory title, gold eyebrow).
+   */
+  tone?: "light" | "dark";
   className?: string;
   children?: ReactNode;
 }
@@ -15,9 +20,12 @@ export function SectionHeading({
   title,
   description,
   align = "center",
+  tone = "light",
   className,
   children,
 }: SectionHeadingProps) {
+  const isDark = tone === "dark";
+
   return (
     <div
       className={cn(
@@ -27,15 +35,32 @@ export function SectionHeading({
       )}
     >
       {eyebrow ? (
-        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-gold">
+        <p
+          className={cn(
+            "text-xs font-semibold uppercase tracking-[0.25em]",
+            isDark ? "text-gold" : "text-gold-deep",
+          )}
+        >
           {eyebrow}
         </p>
       ) : null}
-      <h2 className="max-w-2xl font-display text-3xl leading-tight text-navy sm:text-4xl">
+      <h2
+        className={cn(
+          "max-w-2xl font-display text-3xl leading-tight sm:text-4xl",
+          isDark ? "text-ivory" : "text-navy",
+        )}
+      >
         {title}
       </h2>
       {description ? (
-        <p className="max-w-xl text-base text-muted">{description}</p>
+        <p
+          className={cn(
+            "max-w-xl text-base",
+            isDark ? "text-ivory/70" : "text-navy/70",
+          )}
+        >
+          {description}
+        </p>
       ) : null}
       {children}
     </div>

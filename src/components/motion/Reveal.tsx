@@ -8,7 +8,7 @@ export interface RevealProps {
   delay?: number;
   /** Distance in pixels the element travels upward while entering. */
   y?: number;
-  as?: "div" | "section" | "span";
+  as?: "div" | "section" | "span" | "li";
   className?: string;
 }
 
@@ -25,7 +25,13 @@ export function Reveal({
 }: RevealProps) {
   const reduceMotion = useReducedMotion();
   const Component =
-    as === "section" ? motion.section : as === "span" ? motion.span : motion.div;
+    as === "section"
+      ? motion.section
+      : as === "span"
+        ? motion.span
+        : as === "li"
+          ? motion.li
+          : motion.div;
 
   return (
     <Component

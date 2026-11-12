@@ -6,6 +6,8 @@
   --color-champagne: #e8d9c0;
   --color-gold: #c6a15b;
   --color-gold-light: #e3c68d;
+  /* Darker gold reserved for TEXT on light surfaces (5.5:1 on ivory, 5.2:1 on cream). */
+  --color-gold-deep: #7d5f28;
   --color-navy: #141c2b;
   --color-navy-soft: #1f2a3d;
   --color-blush: #e8c9c4;

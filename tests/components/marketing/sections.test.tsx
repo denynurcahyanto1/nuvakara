@@ -4,6 +4,7 @@ import { Features } from "@/components/marketing/Features";
 import { Pricing } from "@/components/marketing/Pricing";
 import { HowItWorks } from "@/components/marketing/HowItWorks";
 import { TemplateShowcase } from "@/components/marketing/TemplateShowcase";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 import { templatePreviews } from "@/lib/templates-preview";
 
 describe("Features", () => {
@@ -39,6 +40,23 @@ describe("HowItWorks", () => {
   it("merender 5 langkah", () => {
     render(<HowItWorks />);
     expect(screen.getAllByRole("listitem")).toHaveLength(5);
+  });
+
+  it("menaruh <li> langsung di dalam <ol> agar struktur list valid untuk screen reader", () => {
+    const { container } = render(<HowItWorks />);
+    expect(container.querySelectorAll("ol > li")).toHaveLength(5);
+  });
+});
+
+describe("SectionHeading", () => {
+  it("memakai gold-deep untuk teks di latar terang (kontras >= 4.5:1)", () => {
+    render(<SectionHeading eyebrow="Fitur" title="Judul" />);
+    expect(screen.getByText("Fitur").className).toContain("text-gold-deep");
+  });
+
+  it("memakai gold pada latar gelap", () => {
+    render(<SectionHeading eyebrow="Cara Kerja" title="Judul" tone="dark" />);
+    expect(screen.getByText("Cara Kerja").className).toContain("text-gold");
   });
 });
 

@@ -46,7 +46,7 @@ export function Logo({
   );
 
   return (
-    <Link href={href} className="inline-flex items-center rounded-md">
+    <Link href={href} className="inline-flex min-h-11 items-center rounded-md">
       {content}
     </Link>
   );

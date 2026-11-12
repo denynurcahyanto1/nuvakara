@@ -28,7 +28,7 @@ export function Footer() {
                   target="_blank"
                   rel="noreferrer noopener"
                   aria-label={social.label}
-                  className="tap-target rounded-full border border-navy/12 text-navy/70 transition-colors hover:border-gold hover:text-gold"
+                  className="tap-target rounded-full border border-navy/12 text-navy/70 transition-colors hover:border-gold hover:text-gold-deep"
                 >
                   <Icon name={socialIcons[social.label] ?? "mail"} size={18} />
                 </a>
@@ -38,7 +38,7 @@ export function Footer() {
 
           {siteConfig.footer.navGroups.map((group) => (
             <div key={group.title} className="flex flex-col gap-3">
-              <h2 className="text-xs font-semibold tracking-[0.2em] text-gold uppercase">
+              <h2 className="text-xs font-semibold tracking-[0.2em] text-gold-deep uppercase">
                 {group.title}
               </h2>
               <ul className="flex flex-col gap-1">

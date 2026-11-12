@@ -22,14 +22,14 @@ export const templatePreviews: TemplatePreview[] = [
     description:
       "Ceria dan berenergi dengan warna cerah, tipografi dinamis, dan animasi confetti.",
     isPremium: false,
-    palette: "Colourful & Playful",
+    palette: "Warna Cerah & Ceria",
   },
   {
     slug: "baby-shower",
     name: "Baby Shower",
     category: "Baby Shower",
     description:
-      "Lembut dan hangat dengan pastel biru dan pink, ilustrasi ramah, serta animasi yang gentle.",
+      "Lembut dan hangat dengan pastel biru dan pink, ilustrasi ramah, serta animasi yang lembut.",
     isPremium: true,
     palette: "Pastel Blue & Pink",
   },
@@ -38,8 +38,8 @@ export const templatePreviews: TemplatePreview[] = [
     name: "Graduation Modern",
     category: "Wisuda",
     description:
-      "Premium dan tegas dengan latar hitam, aksen emas, tipografi modern, dan reveal mask wipe.",
+      "Premium dan tegas dengan latar hitam, aksen emas, tipografi modern, dan animasi reveal bertipe mask wipe.",
     isPremium: true,
-    palette: "Black & Gold",
+    palette: "Hitam & Emas",
   },
 ];

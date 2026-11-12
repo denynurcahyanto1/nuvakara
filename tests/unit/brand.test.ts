@@ -36,6 +36,10 @@ describe("design tokens", () => {
     expect(css).toContain("100dvh");
   });
 
+  it("mendefinisikan gold-deep untuk teks di latar terang (kontras WCAG AA)", () => {
+    expect(css).toContain("--color-gold-deep");
+  });
+
   it("menghormati prefers-reduced-motion", () => {
     expect(css).toContain("prefers-reduced-motion");
   });

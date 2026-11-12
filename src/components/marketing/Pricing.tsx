@@ -30,7 +30,7 @@ export function Pricing({ plans }: PricingProps) {
           <div className="mt-12">
             <EmptyState
               title="Paket harga sedang disiapkan"
-              description="Paket akan dimuat dari dashboard admin. sementara itu, Anda tetap bisa membuat akun dan menggunakan template gratis."
+              description="Paket akan dimuat dari dashboard admin. Sementara itu, Anda tetap bisa membuat akun dan menggunakan template gratis."
             />
           </div>
         ) : (
@@ -57,7 +57,7 @@ export function Pricing({ plans }: PricingProps) {
                     <ul className="mt-5 flex flex-1 flex-col gap-2 text-sm text-navy/75">
                       {plan.features.map((feature) => (
                         <li key={feature} className="flex items-start gap-2">
-                          <span aria-hidden="true" className="mt-1 text-gold">
+                          <span aria-hidden="true" className="mt-1 text-gold-deep">
                             &#10003;
                           </span>
                           {feature}
