@@ -11,7 +11,7 @@ import { TextReveal } from "@/components/motion/TextReveal";
  * reduced motion enabled (Vitest isolates modules per test file).
  */
 vi.stubGlobal("matchMedia", (query: string) => ({
-  matches: query.includes("prefers-reduced-motion"),
+  matches: query.includes("prefers-reduced-motion: reduce"),
   media: query,
   onchange: null,
   addListener: vi.fn(),
@@ -32,9 +32,16 @@ describe("prefers-reduced-motion", () => {
     expect(screen.getByText("Isi penting")).toBeVisible();
   });
 
-  it("TextReveal merender teks utuh tanpa pemecahan kata", () => {
+  it("TextReveal tetap membacakan teks utuh dan tidak menggeser kata", () => {
     const { container } = render(<TextReveal text="Halo Dunia" />);
-    expect(screen.getByText("Halo Dunia")).toBeVisible();
-    expect(container.querySelectorAll(".inline-block")).toHaveLength(0);
+    expect(
+      screen.getByText("Halo Dunia", { selector: ".sr-only" }),
+    ).toBeInTheDocument();
+    const words = container.querySelectorAll<HTMLElement>("[data-word]");
+    expect(words.length).toBe(2);
+    words.forEach((word) => {
+      expect(word.style.transform).toBe("");
+      expect(word.style.opacity).toBe("");
+    });
   });
 });

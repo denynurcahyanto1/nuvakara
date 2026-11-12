@@ -7,9 +7,38 @@ afterEach(() => {
 });
 
 /**
- * jsdom does not implement IntersectionObserver, which Motion's
- * `useInView` / `whileInView` rely on. The stub reports every observed
- * element as visible so viewport-driven animations settle deterministically.
+ * jsdom (as shipped with Vitest 5) does not implement `window.matchMedia`,
+ * which GSAP's ScrollTrigger requires at registration time. The stub below
+ * answers the queries this project actually uses, so the animation layer
+ * behaves the same in tests as it does in a browser.
+ */
+if (typeof window !== "undefined" && typeof window.matchMedia !== "function") {
+  const evaluate = (query: string): boolean => {
+    if (query.includes("prefers-reduced-motion: reduce")) return false;
+    if (query.includes("prefers-reduced-motion: no-preference")) return true;
+    if (query.includes("min-width: 1024px")) return window.innerWidth >= 1024;
+    if (query.includes("min-width: 768px")) return window.innerWidth >= 768;
+    if (query.includes("hover: hover")) return true;
+    if (query.includes("pointer: fine")) return true;
+    return false;
+  };
+
+  window.matchMedia = ((query: string) => ({
+    matches: evaluate(query),
+    media: query,
+    onchange: null,
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => false,
+  })) as unknown as typeof window.matchMedia;
+}
+
+/**
+ * jsdom does not implement IntersectionObserver either. The stub reports
+ * every observed element as visible so viewport-driven animations settle
+ * deterministically.
  */
 if (!globalThis.IntersectionObserver) {
   class MockIntersectionObserver implements IntersectionObserver {

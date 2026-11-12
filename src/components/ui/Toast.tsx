@@ -1,14 +1,15 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   createContext,
   useCallback,
   useContext,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
+import { gsap, motionQueries, useGSAP } from "@/components/motion/gsap";
 import { cn } from "@/lib/cn";
 
 export interface ToastOptions {
@@ -35,9 +36,71 @@ export function useToast(): ToastContextValue {
   return context;
 }
 
+function ToastCard({
+  item,
+  onDismiss,
+}: {
+  item: ToastItem;
+  onDismiss: (id: number) => void;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    const target = ref.current;
+    if (!target) return;
+
+    const mm = gsap.matchMedia();
+    mm.add(motionQueries.animate, () => {
+      gsap.fromTo(
+        target,
+        { opacity: 0, y: 12, scale: 0.98 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.2,
+          ease: "power3.out",
+          clearProps: "transform",
+        },
+      );
+    });
+
+    return () => mm.revert();
+  }, { scope: ref });
+
+  return (
+    <div
+      ref={ref}
+      role={item.variant === "error" ? "alert" : "status"}
+      className={cn(
+        "pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-2xl border p-4 shadow-[var(--shadow-soft)]",
+        item.variant === "error"
+          ? "border-red-200 bg-red-50 text-red-900"
+          : item.variant === "success"
+            ? "border-emerald-200 bg-emerald-50 text-emerald-900"
+            : "border-navy/10 bg-white text-navy",
+      )}
+    >
+      <div className="flex flex-1 flex-col gap-0.5">
+        <p className="text-sm font-semibold">{item.title}</p>
+        {item.description ? (
+          <p className="text-xs opacity-80">{item.description}</p>
+        ) : null}
+      </div>
+      <button
+        type="button"
+        aria-label="Tutup notifikasi"
+        onClick={() => onDismiss(item.id)}
+        className="tap-target -mr-1 -mt-1 rounded-full px-2 opacity-60 transition-opacity hover:opacity-100"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  );
+}
+
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<ToastItem[]>([]);
-  const reduceMotion = useReducedMotion();
 
   const dismiss = useCallback((id: number) => {
     setItems((current) => current.filter((item) => item.id !== id));
@@ -61,41 +124,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         className="pointer-events-none fixed inset-x-0 bottom-0 z-[60] flex flex-col items-center gap-2 p-4 safe-bottom sm:items-end"
         aria-live="polite"
       >
-        <AnimatePresence initial={false}>
-          {items.map((item) => (
-            <motion.div
-              key={item.id}
-              role={item.variant === "error" ? "alert" : "status"}
-              initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.98 }}
-              transition={{ duration: reduceMotion ? 0 : 0.2 }}
-              className={cn(
-                "pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-2xl border p-4 shadow-[var(--shadow-soft)]",
-                item.variant === "error"
-                  ? "border-red-200 bg-red-50 text-red-900"
-                  : item.variant === "success"
-                    ? "border-emerald-200 bg-emerald-50 text-emerald-900"
-                    : "border-navy/10 bg-white text-navy",
-              )}
-            >
-              <div className="flex flex-1 flex-col gap-0.5">
-                <p className="text-sm font-semibold">{item.title}</p>
-                {item.description ? (
-                  <p className="text-xs opacity-80">{item.description}</p>
-                ) : null}
-              </div>
-              <button
-                type="button"
-                aria-label="Tutup notifikasi"
-                onClick={() => dismiss(item.id)}
-                className="tap-target -mr-1 -mt-1 rounded-full px-2 opacity-60 transition-opacity hover:opacity-100"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </motion.div>
-          ))}
-        </AnimatePresence>
+        {items.map((item) => (
+          <ToastCard key={item.id} item={item} onDismiss={dismiss} />
+        ))}
       </div>
     </ToastContext.Provider>
   );

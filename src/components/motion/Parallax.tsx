@@ -1,8 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { useRef, type ReactNode } from "react";
-import { cn } from "@/lib/cn";
+import { and, gsap, motionQueries, useGSAP } from "./gsap";
 
 export interface ParallaxProps {
   children: ReactNode;
@@ -16,18 +15,34 @@ export interface ParallaxProps {
  * asked for reduced motion, so mobile scrolling never feels hijacked.
  */
 export function Parallax({ children, speed = 0.2, className }: ParallaxProps) {
-  const reduceMotion = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const distance = speed * 120;
-  const y = useTransform(scrollYProgress, [0, 1], [distance, -distance]);
+  const innerRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    const root = ref.current;
+    const inner = innerRef.current;
+    if (!root || !inner) return;
+
+    const mm = gsap.matchMedia();
+    mm.add(and(motionQueries.desktop, motionQueries.animate), () => {
+      gsap.to(inner, {
+        y: -speed * 120,
+        ease: "none",
+        scrollTrigger: {
+          trigger: root,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+    });
+
+    return () => mm.revert();
+  }, { scope: ref });
 
   return (
-    <div ref={ref} className={cn("relative", className)}>
-      <motion.div style={reduceMotion ? undefined : { y }}>{children}</motion.div>
+    <div ref={ref} className={className ? `relative ${className}` : "relative"}>
+      <div ref={innerRef}>{children}</div>
     </div>
   );
 }

@@ -45,6 +45,17 @@ describe("Reveal", () => {
     );
     expect(container.firstElementChild).toHaveClass("kelas-uji");
   });
+
+  it("tidak menyembunyikan isi dari accessibility tree", () => {
+    render(
+      <Reveal>
+        <a href="/tautan">Tautan penting</a>
+      </Reveal>,
+    );
+    // Regression guard: `autoAlpha: 0` sets visibility:hidden, which removes
+    // the element from the accessibility tree until the animation plays.
+    expect(screen.getByRole("link", { name: "Tautan penting" })).toBeInTheDocument();
+  });
 });
 
 describe("TextReveal", () => {

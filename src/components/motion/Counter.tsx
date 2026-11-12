@@ -1,8 +1,7 @@
 "use client";
 
-import { useInView, useReducedMotion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
-import { cn } from "@/lib/cn";
+import { useRef } from "react";
+import { gsap, motionQueries, ScrollTrigger, useGSAP } from "./gsap";
 import { formatNumber } from "@/lib/utils";
 
 export interface CounterProps {
@@ -15,6 +14,8 @@ export interface CounterProps {
 
 /**
  * Counts up to `to` when it scrolls into view.
+ * The value is written straight to the DOM (no React state per frame), so
+ * the animation never triggers a re-render.
  * Reduced motion renders the final value straight away.
  */
 export function Counter({
@@ -24,34 +25,54 @@ export function Counter({
   suffix = "",
   className,
 }: CounterProps) {
-  const reduceMotion = useReducedMotion();
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-  const [value, setValue] = useState(0);
 
-  useEffect(() => {
-    if (reduceMotion || !inView) return;
+  useGSAP(() => {
+    const target = ref.current;
+    if (!target) return;
 
-    let frame = 0;
-    const startedAt = performance.now();
+    const write = (value: number) => {
+      target.textContent = `${prefix}${formatNumber(value)}${suffix}`;
+    };
 
-    function tick(now: number) {
-      const progress = Math.min(1, (now - startedAt) / durationMs);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setValue(Math.round(to * eased));
-      if (progress < 1) frame = requestAnimationFrame(tick);
-    }
+    const mm = gsap.matchMedia();
 
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [inView, to, durationMs, reduceMotion]);
+    mm.add(motionQueries.reduce, () => {
+      write(to);
+    });
 
-  const displayed = reduceMotion ? to : value;
+    mm.add(motionQueries.animate, () => {
+      const counter = { value: 0 };
+      write(0);
+
+      const tween = gsap.to(counter, {
+        value: to,
+        duration: durationMs / 1000,
+        ease: "power2.out",
+        paused: true,
+        onUpdate: () => write(Math.round(counter.value)),
+      });
+
+      const trigger = ScrollTrigger.create({
+        trigger: target,
+        start: "top 92%",
+        once: true,
+        onEnter: () => tween.play(),
+      });
+
+      return () => {
+        trigger.kill();
+        tween.kill();
+      };
+    });
+
+    return () => mm.revert();
+  }, { scope: ref });
 
   return (
-    <span ref={ref} className={cn("tabular-nums", className)}>
+    <span ref={ref} className={`tabular-nums ${className ?? ""}`.trim()}>
       {prefix}
-      {formatNumber(displayed)}
+      {formatNumber(0)}
       {suffix}
     </span>
   );

@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
 import { useRef, type ReactNode } from "react";
+import { and, gsap, motionQueries, useGSAP } from "./gsap";
 import { cn } from "@/lib/cn";
 
 export interface MagneticButtonProps {
@@ -22,33 +22,63 @@ export function MagneticButton({
   strength = 8,
   onClick,
 }: MagneticButtonProps) {
-  const reduceMotion = useReducedMotion();
   const ref = useRef<HTMLButtonElement>(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const springX = useSpring(x, { stiffness: 220, damping: 18, mass: 0.4 });
-  const springY = useSpring(y, { stiffness: 220, damping: 18, mass: 0.4 });
 
-  function handlePointerMove(event: React.PointerEvent<HTMLButtonElement>) {
-    if (reduceMotion || event.pointerType !== "mouse" || !ref.current) return;
-    const bounds = ref.current.getBoundingClientRect();
-    x.set((event.clientX - bounds.left - bounds.width / 2) * strength * 0.1);
-    y.set((event.clientY - bounds.top - bounds.height / 2) * strength * 0.1);
-  }
+  useGSAP(() => {
+    const target = ref.current;
+    if (!target) return;
 
-  function handlePointerLeave() {
-    x.set(0);
-    y.set(0);
-  }
+    const mm = gsap.matchMedia();
+    mm.add(
+      and(
+        motionQueries.wide,
+        motionQueries.pointerFine,
+        motionQueries.animate,
+      ),
+      () => {
+        // quickTo reuses a single tween instead of creating one per pointer move.
+        const moveX = gsap.quickTo(target, "x", {
+          duration: 0.4,
+          ease: "power3",
+        });
+        const moveY = gsap.quickTo(target, "y", {
+          duration: 0.4,
+          ease: "power3",
+        });
+
+        function handlePointerMove(event: PointerEvent) {
+          const bounds = target!.getBoundingClientRect();
+          moveX(
+            (event.clientX - bounds.left - bounds.width / 2) * strength * 0.1,
+          );
+          moveY(
+            (event.clientY - bounds.top - bounds.height / 2) * strength * 0.1,
+          );
+        }
+
+        function handlePointerLeave() {
+          moveX(0);
+          moveY(0);
+        }
+
+        target.addEventListener("pointermove", handlePointerMove);
+        target.addEventListener("pointerleave", handlePointerLeave);
+
+        return () => {
+          target!.removeEventListener("pointermove", handlePointerMove);
+          target!.removeEventListener("pointerleave", handlePointerLeave);
+        };
+      },
+    );
+
+    return () => mm.revert();
+  }, { scope: ref });
 
   return (
-    <motion.button
+    <button
       ref={ref}
       type="button"
       onClick={onClick}
-      onPointerMove={handlePointerMove}
-      onPointerLeave={handlePointerLeave}
-      style={reduceMotion ? undefined : { x: springX, y: springY }}
       className={cn(
         "inline-flex h-14 items-center justify-center rounded-full bg-gold px-8 text-lg font-medium text-navy",
         "shadow-[var(--shadow-glow)] transition-colors hover:bg-gold-light",
@@ -57,6 +87,6 @@ export function MagneticButton({
       )}
     >
       {children}
-    </motion.button>
+    </button>
   );
 }

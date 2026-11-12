@@ -1,8 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
-import type { ReactNode } from "react";
-import { cn } from "@/lib/cn";
+import { useRef, type ReactNode } from "react";
+import { gsap, motionQueries, useGSAP } from "./gsap";
 
 export interface FloatingDecorProps {
   children?: ReactNode;
@@ -19,24 +18,35 @@ export function FloatingDecor({
   delay = 0,
   amplitude = 12,
 }: FloatingDecorProps) {
-  const reduceMotion = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    const target = ref.current;
+    if (!target) return;
+
+    const mm = gsap.matchMedia();
+    mm.add(motionQueries.animate, () => {
+      gsap.to(target, {
+        y: -amplitude,
+        rotation: 1.5,
+        duration: 3.5,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        delay,
+      });
+    });
+
+    return () => mm.revert();
+  }, { scope: ref });
 
   return (
-    <motion.div
+    <div
+      ref={ref}
       aria-hidden="true"
-      className={cn("pointer-events-none absolute", className)}
-      animate={
-        reduceMotion
-          ? undefined
-          : { y: [0, -amplitude, 0], rotate: [0, 1.5, 0] }
-      }
-      transition={
-        reduceMotion
-          ? undefined
-          : { duration: 7, repeat: Infinity, ease: "easeInOut", delay }
-      }
+      className={`pointer-events-none absolute ${className ?? ""}`.trim()}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

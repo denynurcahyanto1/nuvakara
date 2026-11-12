@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { gsap, motionQueries, useGSAP } from "@/components/motion/gsap";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Logo } from "@/components/ui/Logo";
@@ -17,7 +17,29 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
-  const reduceMotion = useReducedMotion();
+  const drawerRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    const drawer = drawerRef.current;
+    if (!drawer) return;
+
+    const mm = gsap.matchMedia();
+    mm.add(motionQueries.animate, () => {
+      gsap.fromTo(
+        drawer,
+        { opacity: 0, y: -12 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.22,
+          ease: "power3.out",
+          clearProps: "transform",
+        },
+      );
+    });
+
+    return () => mm.revert();
+  }, { dependencies: [open], scope: drawerRef });
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -98,12 +120,10 @@ export function Navbar() {
       </nav>
 
       {open ? (
-        <motion.div
+        <div
+          ref={drawerRef}
           role="dialog"
           aria-label="Menu navigasi"
-          initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: reduceMotion ? 0 : 0.22, ease: [0.22, 1, 0.36, 1] }}
           className="h-dvh overflow-y-auto border-t border-navy/10 bg-ivory px-5 pb-8 pt-6 lg:hidden"
         >
           <div className="flex items-center justify-between">
@@ -143,7 +163,7 @@ export function Navbar() {
               Login
             </Button>
           </div>
-        </motion.div>
+        </div>
       ) : null}
     </header>
   );

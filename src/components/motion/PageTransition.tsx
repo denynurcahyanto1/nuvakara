@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
+import { gsap, motionQueries, useGSAP } from "./gsap";
 
 export interface PageTransitionProps {
   children: ReactNode;
@@ -9,15 +9,25 @@ export interface PageTransitionProps {
 
 /** Fade + lift applied on route change. */
 export function PageTransition({ children }: PageTransitionProps) {
-  const reduceMotion = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
 
-  return (
-    <motion.div
-      initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: reduceMotion ? 0.12 : 0.25, ease: [0.22, 1, 0.36, 1] }}
-    >
-      {children}
-    </motion.div>
-  );
+  useGSAP(() => {
+    const target = ref.current;
+    if (!target) return;
+
+    const mm = gsap.matchMedia();
+    mm.add(motionQueries.animate, () => {
+      gsap.from(target, {
+        opacity: 0,
+        y: 8,
+        duration: 0.25,
+        ease: "power2.out",
+        clearProps: "transform",
+      });
+    });
+
+    return () => mm.revert();
+  }, { scope: ref });
+
+  return <div ref={ref}>{children}</div>;
 }

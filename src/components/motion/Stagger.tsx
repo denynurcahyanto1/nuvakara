@@ -1,8 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
-import type { ReactNode } from "react";
-import { cn } from "@/lib/cn";
+import { useRef, type ReactNode } from "react";
+import { gsap, motionQueries, useGSAP } from "./gsap";
 
 export interface StaggerProps {
   children: ReactNode;
@@ -17,34 +16,40 @@ export function Stagger({
   gap = 0.08,
   className,
 }: StaggerProps) {
-  const reduceMotion = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    const root = ref.current;
+    if (!root) return;
+    const items = root.querySelectorAll<HTMLElement>("[data-stagger-item]");
+
+    const mm = gsap.matchMedia();
+    mm.add(motionQueries.animate, () => {
+      gsap.from(items, {
+        opacity: 0,
+        y: 16,
+        duration: 0.5,
+        ease: "power3.out",
+        stagger: gap,
+        scrollTrigger: {
+          trigger: root,
+          start: "top 85%",
+          once: true,
+        },
+      });
+    });
+
+    return () => mm.revert();
+  }, { scope: ref });
 
   return (
-    <motion.div
-      className={className}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, margin: "-60px" }}
-      variants={{
-        hidden: {},
-        show: { transition: { staggerChildren: reduceMotion ? 0 : gap } },
-      }}
-    >
+    <div ref={ref} className={className}>
       {children}
-    </motion.div>
+    </div>
   );
 }
 
-/** Child variant used inside `Stagger`. */
-export const staggerItem = {
-  hidden: { opacity: 0, y: 16 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const },
-  },
-};
-
+/** Child wrapper for `Stagger`. */
 export function StaggerItem({
   children,
   className,
@@ -53,8 +58,8 @@ export function StaggerItem({
   className?: string;
 }) {
   return (
-    <motion.div className={cn(className)} variants={staggerItem}>
+    <div data-stagger-item="" className={className}>
       {children}
-    </motion.div>
+    </div>
   );
 }

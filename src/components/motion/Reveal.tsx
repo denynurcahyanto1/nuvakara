@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
+import { gsap, motionQueries, useGSAP } from "./gsap";
 
 export interface RevealProps {
   children: ReactNode;
@@ -14,7 +14,8 @@ export interface RevealProps {
 
 /**
  * Scroll reveal: fades and lifts its children into view once.
- * With reduced motion the content is rendered visible immediately.
+ * With reduced motion the content is rendered visible immediately — GSAP
+ * never applies the start state, so nothing can stay stuck at opacity 0.
  */
 export function Reveal({
   children,
@@ -23,25 +24,38 @@ export function Reveal({
   as = "div",
   className,
 }: RevealProps) {
-  const reduceMotion = useReducedMotion();
-  const Component =
-    as === "section"
-      ? motion.section
-      : as === "span"
-        ? motion.span
-        : as === "li"
-          ? motion.li
-          : motion.div;
+  const ref = useRef<HTMLElement | null>(null);
+  const setRef = (node: HTMLElement | null) => {
+    ref.current = node;
+  };
 
-  return (
-    <Component
-      className={className}
-      initial={reduceMotion ? false : { opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
-    >
-      {children}
-    </Component>
-  );
+  useGSAP(() => {
+    const target = ref.current;
+    if (!target) return;
+
+    const mm = gsap.matchMedia();
+    mm.add(motionQueries.animate, () => {
+      gsap.from(target, {
+        opacity: 0,
+        y,
+        duration: 0.6,
+        delay,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: target,
+          start: "top 85%",
+          once: true,
+        },
+      });
+    });
+
+    return () => mm.revert();
+  }, { scope: ref });
+
+  const props = { ref: setRef, className, "data-reveal": "" } as const;
+
+  if (as === "section") return <section {...props}>{children}</section>;
+  if (as === "span") return <span {...props}>{children}</span>;
+  if (as === "li") return <li {...props}>{children}</li>;
+  return <div {...props}>{children}</div>;
 }

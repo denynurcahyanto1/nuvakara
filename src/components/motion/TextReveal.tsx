@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
-import { cn } from "@/lib/cn";
+import { useRef } from "react";
+import { gsap, motionQueries, useGSAP } from "./gsap";
 
 export interface TextRevealProps {
   text: string;
@@ -20,36 +20,57 @@ export function TextReveal({
   delay = 0,
   className,
 }: TextRevealProps) {
-  const reduceMotion = useReducedMotion();
+  const ref = useRef<HTMLElement | null>(null);
+  const setRef = (node: HTMLElement | null) => {
+    ref.current = node;
+  };
   const words = text.split(" ");
-  const Tag = as;
 
-  if (reduceMotion) {
-    return <Tag className={className}>{text}</Tag>;
-  }
+  useGSAP(() => {
+    const root = ref.current;
+    if (!root) return;
+    const wordElements = root.querySelectorAll<HTMLElement>("[data-word]");
 
-  return (
-    <Tag className={cn("inline-block", className)}>
+    const mm = gsap.matchMedia();
+    mm.add(motionQueries.animate, () => {
+      gsap.from(wordElements, {
+        yPercent: 110,
+        opacity: 0,
+        duration: 0.65,
+        delay,
+        ease: "power3.out",
+        stagger: 0.05,
+      });
+    });
+
+    return () => mm.revert();
+  }, { scope: ref });
+
+  const content = (
+    <>
       <span className="sr-only">{text}</span>
       <span aria-hidden="true">
         {words.map((word, index) => (
-          <span key={`${word}-${index}`} className="inline-block overflow-hidden align-bottom">
-            <motion.span
-              className="inline-block"
-              initial={{ y: "110%" }}
-              animate={{ y: 0 }}
-              transition={{
-                duration: 0.65,
-                delay: delay + index * 0.05,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-            >
+          <span
+            key={`${word}-${index}`}
+            data-word=""
+            className="inline-block overflow-hidden align-bottom"
+          >
+            <span className="inline-block">
               {word}
               {index < words.length - 1 ? "\u00A0" : ""}
-            </motion.span>
+            </span>
           </span>
         ))}
       </span>
-    </Tag>
+    </>
   );
+
+  const props = { ref: setRef, className } as const;
+
+  if (as === "h1") return <h1 {...props}>{content}</h1>;
+  if (as === "h2") return <h2 {...props}>{content}</h2>;
+  if (as === "h3") return <h3 {...props}>{content}</h3>;
+  if (as === "p") return <p {...props}>{content}</p>;
+  return <span {...props}>{content}</span>;
 }

@@ -1,7 +1,7 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { useEffect, useRef, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { gsap, motionQueries, useGSAP } from "@/components/motion/gsap";
 import { cn } from "@/lib/cn";
 
 export interface ModalProps {
@@ -30,8 +30,73 @@ export function Modal({
   children,
   footer,
 }: ModalProps) {
+  const [closing, setClosing] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
-  const reduceMotion = useReducedMotion();
+  const backdropRef = useRef<HTMLDivElement>(null);
+
+  /**
+   * Closing is event-driven: the exit animation runs, and only when it
+   * finishes does the dialog unmount. `closing` keeps it mounted while the
+   * parent has already flipped `open` to false.
+   */
+  const requestClose = useCallback(() => {
+    const panel = dialogRef.current;
+    const backdrop = backdropRef.current;
+
+    if (!panel || !backdrop) {
+      onClose();
+      return;
+    }
+
+    setClosing(true);
+    gsap.to([panel, backdrop], {
+      opacity: 0,
+      duration: 0.18,
+      ease: "power2.in",
+      onComplete: () => setClosing(false),
+    });
+    onClose();
+  }, [onClose]);
+
+  const rendered = open || closing;
+
+  useGSAP(
+    () => {
+      if (!rendered) return;
+      const panel = dialogRef.current;
+      const backdrop = backdropRef.current;
+      if (!panel || !backdrop) return;
+
+      const mm = gsap.matchMedia();
+      mm.add(motionQueries.animate, () => {
+        gsap.fromTo(
+          panel,
+          { opacity: 0, scale: 0.96, y: 16 },
+          {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.22,
+            ease: "power3.out",
+            clearProps: "transform",
+          },
+        );
+        gsap.fromTo(
+          backdrop,
+          { opacity: 0 },
+          {
+            opacity: 1,
+            duration: 0.22,
+            ease: "none",
+            clearProps: "visibility",
+          },
+        );
+      });
+
+      return () => mm.revert();
+    },
+    { dependencies: [rendered], scope: dialogRef },
+  );
 
   useEffect(() => {
     if (!open) return;
@@ -44,7 +109,7 @@ export function Modal({
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         event.preventDefault();
-        onClose();
+        requestClose();
         return;
       }
 
@@ -52,7 +117,10 @@ export function Modal({
 
       const focusables = Array.from(
         dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE),
-      ).filter((element) => element.offsetParent !== null || element === document.activeElement);
+      ).filter(
+        (element) =>
+          element.offsetParent !== null || element === document.activeElement,
+      );
 
       if (focusables.length === 0) {
         event.preventDefault();
@@ -78,59 +146,50 @@ export function Modal({
       document.body.style.overflow = overflow;
       previouslyFocused?.focus?.();
     };
-  }, [open, onClose]);
+  }, [open, requestClose]);
+
+  if (!rendered) return null;
 
   return (
-    <AnimatePresence>
-      {open ? (
-        <div className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-6">
-          <motion.div
-            data-testid="modal-backdrop"
-            onClick={onClose}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: reduceMotion ? 0 : 0.2 }}
-            className="absolute inset-0 bg-navy/50 backdrop-blur-sm"
-          />
-          <motion.div
-            ref={dialogRef}
-            role="dialog"
-            aria-modal="true"
-            aria-label={title}
-            tabIndex={-1}
-            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: 16 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.98, y: 8 }}
-            transition={{ duration: reduceMotion ? 0 : 0.22, ease: [0.22, 1, 0.36, 1] }}
-            className={cn(
-              "relative z-10 flex max-h-[90dvh] w-full flex-col overflow-hidden",
-              "rounded-t-3xl bg-white shadow-[var(--shadow-soft)] sm:max-w-lg sm:rounded-3xl",
-            )}
-          >
-            <div className="flex items-start justify-between gap-4 border-b border-navy/10 p-5">
-              <div className="flex flex-col gap-1">
-                <h2 className="font-display text-2xl text-navy">{title}</h2>
-                {description ? (
-                  <p className="text-sm text-muted">{description}</p>
-                ) : null}
-              </div>
-              <button
-                type="button"
-                aria-label="Tutup"
-                onClick={onClose}
-                className="tap-target -mr-2 -mt-1 rounded-full text-xl leading-none text-navy/60 transition-colors hover:bg-navy/5 hover:text-navy"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div className="flex-1 overflow-y-auto p-5">{children}</div>
-            {footer ? (
-              <div className="border-t border-navy/10 p-5">{footer}</div>
+    <div className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-6">
+      <div
+        ref={backdropRef}
+        data-testid="modal-backdrop"
+        onClick={requestClose}
+        className="absolute inset-0 bg-navy/50 backdrop-blur-sm"
+      />
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        tabIndex={-1}
+        className={cn(
+          "relative z-10 flex max-h-[90dvh] w-full flex-col overflow-hidden",
+          "rounded-t-3xl bg-white shadow-[var(--shadow-soft)] sm:max-w-lg sm:rounded-3xl",
+        )}
+      >
+        <div className="flex items-start justify-between gap-4 border-b border-navy/10 p-5">
+          <div className="flex flex-col gap-1">
+            <h2 className="font-display text-2xl text-navy">{title}</h2>
+            {description ? (
+              <p className="text-sm text-muted">{description}</p>
             ) : null}
-          </motion.div>
+          </div>
+          <button
+            type="button"
+            aria-label="Tutup"
+            onClick={requestClose}
+            className="tap-target -mr-2 -mt-1 rounded-full text-xl leading-none text-navy/60 transition-colors hover:bg-navy/5 hover:text-navy"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-      ) : null}
-    </AnimatePresence>
+        <div className="flex-1 overflow-y-auto p-5">{children}</div>
+        {footer ? (
+          <div className="border-t border-navy/10 p-5">{footer}</div>
+        ) : null}
+      </div>
+    </div>
   );
 }

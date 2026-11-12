@@ -33,7 +33,7 @@ Setiap plan menghasilkan perangkat lunak yang bisa dijalankan & diuji sendiri.
 - **Next.js 16.4.6**: `params`/`searchParams` adalah Promise (wajib `await`); `middleware.ts` sudah menjadi **`proxy.ts`** (runtime `nodejs`); Turbopack default; `cacheComponents` **tidak** diaktifkan; `next build` **tidak** menjalankan ESLint → `npm run lint` adalah perintah terpisah; `next lint` sudah dihapus.
 - **React 19.3**: `useActionState` untuk form server action.
 - **Tailwind CSS v4**: CSS-first. **Tidak ada** `tailwind.config.js`. Token ditulis di `src/app/globals.css` blok `@theme`.
-- **Motion 14**: import dari `"motion/react"`. `once` **wajib di dalam `viewport`** (`viewport={{ once: true }}`), bukan prop top-level. `useReducedMotion()` mengembalikan `null` saat SSR → cabang reduced-motion harus dikunci di client.
+- **Animation library: GSAP 3.15** (`gsap` + `@gsap/react`) — NOT Motion/Anime.js/Theatre.js. Decided 2026-11-12 after a three-way comparison (GSAP 28 KB gz core + 17 KB ScrollTrigger, 100% free incl. all plugins & commercial use; Anime.js 3–10 KB but no official React hook and a shallower scroll API; Theatre.js pre-1.0 with an AGPL studio and a dormant public repo). Rules: `gsap.matchMedia()` with explicit queries; the animate branch only matches `(prefers-reduced-motion: no-preference)`; `useGSAP()` from `@gsap/react` for automatic cleanup; `gsap.quickTo()` for pointer-driven values; `ref` + `scope` instead of bare selectors; **never `autoAlpha`** on page content (it sets `visibility: hidden` and removes the element from the accessibility tree); only `transform`/`opacity`; every animation component needs `"use client"`, including the barrel `components/motion/index.ts`.
 - **Brand**: NUVAKARA. Aset: `src/app/favicon.ico`, `src/app/icon.png`, `src/app/apple-icon.png`, `public/brand/nuvakara-mark.png`, `public/brand/nuvakara-mark-sm.png`, `public/brand/nuvakara-logo-lockup.png`. Logo lockup **hanya** dipakai di latar terang (sub-teks navy).
 - **Copy**: `Every Moment Deserves a Beautiful Invitation.` (tagline), `Create Beautiful Invitations for Your Special Moments.` (hero), `Ubah momen spesial menjadi pengalaman digital yang tak terlupakan bersama Nuvakara.` (subheadline). Tanpa branding vendor lain, tanpa watermark.
 - **Tidak boleh** ada data dummy, tombol palsu, atau klaim transaksi.
@@ -140,7 +140,7 @@ tests/
 Run:
 ```bash
 npm install motion zod clsx tailwind-merge @supabase/supabase-js @supabase/ssr server-only
-npm install -D vitest @vitest/ui jsdom @testing-library/react @testing-library/jest-dom @testing-library/user-event pg @types/pg
+npm install -D vitest jsdom @testing-library/react @testing-library/jest-dom @testing-library/user-event pg @types/pg
 ```
 Expected: exit 0; `package.json` dependencies berisi `motion`, `zod`, `clsx`, `tailwind-merge`, `@supabase/supabase-js`, `@supabase/ssr`, `server-only`.
 
@@ -301,7 +301,7 @@ import { cleanup } from "@testing-library/react";
 
 afterEach(() => cleanup());
 ```
-Tambahkan ke `tsconfig.json`: `"types": ["vitest/globals", "@testing-library/jest-dom"]` (tambahkan ke `compilerOptions`, jangan hapus `types` yang sudah ada bila ada).
+Tambahkan ke `tsconfig.json` pada `compilerOptions`: `"types": ["node", "vitest/globals", "@testing-library/jest-dom"]` (`node` wajib — test memakai `node:fs` & `process.cwd()`).
 
 - [ ] **Step 9: Run test untuk memastikan lulus**
 
@@ -333,7 +333,7 @@ git commit -m "feat: design tokens, brand config, and test harness"
   - `<Button variant?: "primary"|"secondary"|"ghost"|"danger"; size?: "sm"|"md"|"lg"; href?: string; isLoading?: boolean; leftIcon?: ReactNode; rightIcon?: ReactNode; ...>` — merender `<a>` bila `href`, `<button>` bila tidak; `isLoading` → `aria-busy="true"` + spinner + `disabled`.
   - `<Input name; type?; label?; error?; hint?; ...>` → merender `<input>` + `<label htmlFor>` + pesan error dengan `aria-invalid` & `aria-describedby`.
   - `<Field label htmlFor error hint required>` — wrapper label/desc/error untuk kontrol custom.
-  - `Plan { id: string; slug: string; name: string; description: string | null; price: number; currency: string; features: string[]; maxInvitations: number; isPremium: boolean }` — bentuk **UI**; DAL mengembalikan `PlanRecord` dengan nama kolom snake_case, dan halaman memetakannya ke `Plan` (mapping dilakukan eksplisit di `src/app/page.tsx`, bukan diam-diam).
+  - `Plan { id: string; slug?: string; name: string; description?: string | null; price: number; currency: string; features: string[]; maxInvitations: number; isPremium: boolean }` — bentuk **UI**; `slug` & `description` opsional supaya fixture test boleh memakai bentuk minimum. DAL mengembalikan `PlanRecord` (snake_case) dan halaman memetakannya secara eksplisit ke `Plan` di `src/app/page.tsx` (mapping eksplisit, bukan diam-diam).
   - `<Modal open onClose title description children footer>` — portal, tutup dengan Escape, klik backdrop, `role="dialog"` `aria-modal="true"`, fokus dipindah ke dialog saat terbuka, focus trap, `document.body` scroll lock.
   - `<ToastProvider>` + `useToast(): { toast: (opts: { title: string; description?: string; variant?: "default"|"success"|"error" }) => void }`.
   - `<Skeleton className?>` (shimmer), `<EmptyState icon? title description action?>`, `<Badge variant?>`, `<Card>`, `<Container>`, `<SectionHeading eyebrow? title description align?>`, `<Logo size? variant? href? />` (monogram emas + wordmark HTML).
@@ -501,8 +501,8 @@ git commit -m "feat: reusable UI primitives"
 
 - [ ] **Step 1: Install & verifikasi import Motion**
 
-Run: `node -e "const m=require('motion/react');console.log(['motion','useReducedMotion','useScroll','useTransform','AnimatePresence','useInView'].map(k=>k+':'+(k in m)).join(' '))"`
-Expected: semua `true` (pakai ESM: `node --input-type=module -e "import('motion/react').then(m=>console.log(Object.keys(m).length))"`).
+Run: `node -e "import('gsap').then(m=>console.log('gsap', Object.keys(m).length))"`
+Expected: `gsap <n>` — GSAP + `@gsap/react` terpasang, `motion` sudah dilepas dari `package.json`.
 
 - [ ] **Step 2: Write failing test — Reveal & Counter**
 

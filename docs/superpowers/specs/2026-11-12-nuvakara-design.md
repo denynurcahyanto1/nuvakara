@@ -100,7 +100,7 @@ Implementasi: helper `ensureAdminRole()` dipanggil **di dalam login server actio
 ### 5.1 Stack final
 ```
 next 16.4.6 (App Router, Turbopack)  ·  react 19.3  ·  typescript 5 (strict)
-tailwindcss 4.3.3                    ·  motion 14.x (import "motion/react")
+tailwindcss 4.3.3                    ·  gsap 3.15 + @gsap/react
 @supabase/supabase-js 2.119          ·  @supabase/ssr 0.12.7
 zod 4.x  ·  vitest  ·  clsx + tailwind-merge  ·  server-only
 ```
@@ -213,22 +213,31 @@ export const templateRegistry = {
 
 ### 5.6 Sistem animasi
 
+**Pustaka: GSAP 3.15** (`gsap` + `@gsap/react`) — dipilih 12 Nov 2026 atas Motion, Anime.js, dan Theatre.js. Alasannya: Phase 4 (template engine) butuh koreografi timeline multi-tahap (confetti, marquee, mask-wipe, shine sweep) yang menjadi specialty GSAP; GSAP kini **100% gratis termasuk semua plugin** (SplitText, ScrollTrigger, MorphSVG) dengan penggunaan komersial; `gsap.matchMedia()` menyatukan responsif + `prefers-reduced-motion` dalam satu tempat; dan `@gsap/react` (`useGSAP`) menangani cleanup/revert dengan benar di App Router.
+
 Prinsip: animasi punya tujuan (mengarah mata, umpan balik, state). Tidak ada parallax pada elemen yang sedang dibaca.
 
 | Komponen | Perilaku | Reduced motion |
 |---|---|---|
-| `Reveal` | fade+slide 24px saat masuk viewport, **sekali**: `viewport={{ once: true, margin: "-80px" }}` | langsung tampil |
-| `TextReveal` | split per kata, stagger 30–60ms | teks utuh |
-| `Parallax` | translateY berbasis scroll (desktop) | statis |
-| `Counter` | angka naik saat masuk viewport | angka final |
-| `FloatingDecor` | ornament melayang | diam |
-| `GradientOrb` | gradient blob bergerak (CSS keyframes) | statis |
-| `PageTransition` | fade + slide 8px via `template.tsx` | tanpa transisi |
-| `Modal` | scale 0.96→1 + backdrop fade, `AnimatePresence` | fade saja |
-| `MagneticButton` | tombol bergerak halus ke arah cursor (desktop) | statis |
-| `Stagger` | container + child stagger | statis |
+| `Reveal` | scroll reveal fade+slide 24px, sekali (`ScrollTrigger` `once: true`) | langsung tampil |
+| `TextReveal` | split per kata, stagger 0.05s, `yPercent` + `opacity` | teks utuh, tanpa stagger |
+| `Parallax` | `ScrollTrigger` `scrub: true`, desktop saja | statis |
+| `Counter` | menghitung naik saat masuk viewport, ditulis langsung ke DOM (tanpa re-render React) | angka final |
+| `FloatingDecor` | ornament melayang (`repeat: -1, yoyo`) | diam |
+| `GradientOrb` | gradient blob bergerak via CSS keyframes (di luar main thread) | statis |
+| `Stagger` | container `stagger` + `ScrollTrigger` `once: true` | statis |
+| `PageTransition` | fade + slide 8px saat route berubah | tanpa transisi |
+| `Modal` / `Toast` | fade + scale; `AnimatePresence` digantikan state `closing` + tween | durasi 0 |
+| `MagneticButton` | `gsap.quickTo` mengikuti cursor (desktop + pointer fine) | statis |
+| `GradientText` | teks dengan gradient emas (CSS) | statis |
 
-Semua memakai `motion/react`. `once` **harus di dalam `viewport`**, bukan prop top-level (API motion 14). `useReducedMotion()` mengembalikan `null` saat SSR → cabang reduced-motion dikunci di **client** (`initial={false}` bila media query match), bukan hanya mengganti nilai target. Hanya `transform`/`opacity` yang dianimasikan.
+Aturan implementasi:
+- Semua animasi memakai `gsap.matchMedia()` dengan query eksplisit. Query `(prefers-reduced-motion: no-preference)` **hanya** cocok bila user tidak meminta reduced motion → callback tidak pernah jalan untuk mereka, dan karena state awal diterapkan GSAP sendiri, konten **tidak pernah** tersangkut di `opacity: 0`.
+- Hanya `transform` & `opacity` yang dianimasikan (GPU-friendly). `autoAlpha` **dilarang** untuk konten halaman: ia menyetel `visibility: hidden` yang menghapus elemen dari accessibility tree sebelum animasi berjalan.
+- `useGSAP()` dari `@gsap/react` (bukan `useEffect` + `gsap.context()`): cleanup & revert otomatis saat unmount.
+- `gsap.quickTo()` untuk animasi yang sering di-update (pointer follow) — bukan membuat tween baru per event.
+- Target memakai `ref` + `scope`, bukan selector string tanpa scope.
+- Semua komponen animasi wajib ber-`"use client"` (GSAP tidak punya `use client` sendiri) — termasuk file barrel `components/motion/index.ts`.
 
 ### 5.7 Design tokens (Tailwind v4 `@theme`)
 

@@ -1,3 +1,5 @@
+"use client";
+
 export { Counter } from "./Counter";
 export { FloatingDecor } from "./FloatingDecor";
 export { GradientOrb } from "./GradientOrb";
@@ -6,5 +8,6 @@ export { MagneticButton } from "./MagneticButton";
 export { PageTransition } from "./PageTransition";
 export { Parallax } from "./Parallax";
 export { Reveal } from "./Reveal";
-export { Stagger, StaggerItem, staggerItem } from "./Stagger";
+export { Stagger, StaggerItem } from "./Stagger";
 export { TextReveal } from "./TextReveal";
+export { gsap, ScrollTrigger, useGSAP, motionQueries, and } from "./gsap";
