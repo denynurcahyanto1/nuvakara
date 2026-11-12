@@ -1,4 +1,4 @@
-import { getServerClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 
 /** A pricing plan exactly as it is stored in Postgres. */
 export interface PlanRecord {
@@ -21,8 +21,13 @@ export interface PlanRecord {
  * can render an honest empty state instead of a fake price.
  */
 export async function getActivePlans(): Promise<PlanRecord[]> {
-  const supabase = getServerClient();
-  if (!supabase) return [];
+  let supabase;
+  try {
+    supabase = await createClient();
+  } catch {
+    // Supabase is not configured: no plans to show.
+    return [];
+  }
 
   const { data, error } = await supabase
     .from("pricing_plans")
