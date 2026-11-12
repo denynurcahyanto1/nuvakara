@@ -25,6 +25,40 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"event_visits": {
+                  Row: {
+                    "created_at": string | null,"event_id": number | null,"id": number,"user_id": number | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string | null,"event_id"?: number | null,"id"?: number,"user_id"?: number | null
+                  }
+                  Update: {
+                    "created_at"?: string | null,"event_id"?: number | null,"id"?: number,"user_id"?: number | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "event_visits_event_id_fkey"
+      columns: ["event_id"]
+isOneToOne: false
+      referencedRelation: "events"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"events": {
+                  Row: {
+                    "created_at": string | null,"description": string | null,"id": number,"is_active": boolean | null,"is_published": boolean | null,"name": string,"owner_id": string,"slug": string,"updated_at": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string | null,"description"?: string | null,"id"?: number,"is_active"?: boolean | null,"is_published"?: boolean | null,"name": string,"owner_id": string,"slug": string,"updated_at"?: string | null
+                  }
+                  Update: {
+                    "created_at"?: string | null,"description"?: string | null,"id"?: number,"is_active"?: boolean | null,"is_published"?: boolean | null,"name"?: string,"owner_id"?: string,"slug"?: string,"updated_at"?: string | null
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"pricing_plans": {
                   Row: {
                     "allow_premium_templates": boolean,"billing_period": string,"created_at": string,"currency": string,"description": string | null,"duration_days": number | null,"features": (string)[],"id": string,"is_active": boolean,"is_premium": boolean,"max_invitations": number,"name": string,"price": number,"slug": string,"sort_order": number,"updated_at": string
@@ -63,6 +97,20 @@ isOneToOne: false
                   }
                   Update: {
                     "applied_at"?: string,"name"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"templates": {
+                  Row: {
+                    "description": string | null,"id": number,"name": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "description"?: string | null,"id"?: number,"name": string
+                  }
+                  Update: {
+                    "description"?: string | null,"id"?: number,"name"?: string
                   }
                   Relationships: [
                     
