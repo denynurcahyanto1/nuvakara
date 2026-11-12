@@ -47,7 +47,7 @@ isOneToOne: false
                   ]
                 },"events": {
                   Row: {
-                    "created_at": string | null,"description": string | null,"id": number,"is_active": boolean | null,"is_published": boolean | null,"name": string,"owner_id": string,"slug": string,"updated_at": string | null
+                    "created_at": string | null,"cover_image": string | null,"description": string | null,"id": number,"is_active": boolean | null,"is_published": boolean | null,"name": string,"owner_id": string,"slug": string,"template_data": Json | null,"template_slug": string | null,"updated_at": string | null
                   }
                   ComputedFields: never
                   Insert: {

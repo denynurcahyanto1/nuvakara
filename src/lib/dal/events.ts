@@ -6,6 +6,28 @@ type EventInsert = Database["public"]["Tables"]["events"]["Insert"];
 type EventUpdate = Database["public"]["Tables"]["events"]["Update"];
 
 /**
+ * Fetch a single event by its ID.
+ * Returns null when not found or on error.
+ */
+export async function getEventById(id: number): Promise<Event | null> {
+  let supabase;
+  try {
+    supabase = await createClient();
+  } catch {
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("events")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) return null;
+  return data;
+}
+
+/**
  * Fetch a single event by its unique slug.
  * Returns null when not found or on error.
  */

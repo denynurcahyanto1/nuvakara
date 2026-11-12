@@ -30,3 +30,8 @@ export const registry: Record<string, TemplateMetadata> = {
 export const getRenderer = (slug: string): TemplateRenderer => {
   return registry[slug]?.renderer || FallbackRenderer;
 };
+
+export const TemplateDispatcher: React.FC<{ slug: string; data: Record<string, unknown> }> = ({ slug, data }) => {
+  const Renderer = getRenderer(slug);
+  return React.createElement(Renderer, { data });
+};
