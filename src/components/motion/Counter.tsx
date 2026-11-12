@@ -51,6 +51,8 @@ export function Counter({
         ease: "power2.out",
         paused: true,
         onUpdate: () => write(Math.round(counter.value)),
+        // Guarantee the final value even if the tween is interrupted.
+        onComplete: () => write(to),
       });
 
       const trigger = ScrollTrigger.create({
@@ -71,8 +73,11 @@ export function Counter({
 
   return (
     <span ref={ref} className={`tabular-nums ${className ?? ""}`.trim()}>
+      {/* The final value is the server-rendered content, so the number is
+          correct without JavaScript and survives a React re-render. GSAP
+          animates from 0 to the same value when it scrolls into view. */}
       {prefix}
-      {formatNumber(0)}
+      {formatNumber(to)}
       {suffix}
     </span>
   );

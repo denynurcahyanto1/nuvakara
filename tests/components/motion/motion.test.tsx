@@ -88,6 +88,18 @@ describe("Counter", () => {
       timeout: 5000,
     });
   });
+
+  it("tetap menampilkan nilai akhir setelah re-render React", async () => {
+    stubReducedMotion(false);
+    const { rerender } = render(<Counter to={1250} />);
+    await waitFor(() => expect(screen.getByText("1.250")).toBeInTheDocument(), {
+      timeout: 5000,
+    });
+    // Regression guard: the value is written straight to the DOM by GSAP, so
+    // a React re-render must not reset it to the placeholder.
+    rerender(<Counter to={1250} />);
+    expect(screen.getByText("1.250")).toBeInTheDocument();
+  });
 });
 
 describe("Parallax", () => {

@@ -33,6 +33,15 @@ export function Modal({
   const [closing, setClosing] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
+  const exitTweenRef = useRef<gsap.core.Tween | null>(null);
+
+  // A tween that outlives the component would keep animating a detached node.
+  useEffect(() => {
+    return () => {
+      exitTweenRef.current?.kill();
+      exitTweenRef.current = null;
+    };
+  }, []);
 
   /**
    * Closing is event-driven: the exit animation runs, and only when it
@@ -49,12 +58,15 @@ export function Modal({
     }
 
     setClosing(true);
-    gsap.to([panel, backdrop], {
+    const tween = gsap.to([panel, backdrop], {
       opacity: 0,
       duration: 0.18,
       ease: "power2.in",
       onComplete: () => setClosing(false),
     });
+    // The backdrop must stop catching clicks while the dialog fades out.
+    gsap.set(backdrop, { pointerEvents: "none" });
+    exitTweenRef.current = tween;
     onClose();
   }, [onClose]);
 
