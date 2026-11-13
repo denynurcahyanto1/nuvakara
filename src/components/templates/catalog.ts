@@ -11,39 +11,37 @@ export interface TemplateCatalogEntry extends TemplatePreview {
 }
 
 const descriptions: Record<string, string> = {
-  "floral-ivory":
-    "Nuansa ivory, sage, dan blush dengan lengkungan bunga, tipografi serif, serta detail botanikal yang halus.",
-  "elegan-maison":
-    "Garis art-deco, emas tua, dan tata letak editorial yang tenang — kemewahan yang tidak perlu berteriak.",
-  "dark-noir":
-    "Latar charcoal, aksen kuningan, dan tipografi besar bergaya majalah. Dramatis, intim, dan berkelas.",
-  "fleksibel-cerita":
-    "Hangat dan personal, cocok untuk pernikahan maupun acara lain. Kartu besar, warna tanah, dan cerita yang mengalir.",
-  "adat-sekar":
-    "Marun dan emas dengan ornamen batik, gunungan, serta sapaan Jawa yang membumi.",
-  "minimalis-lumen":
-    "Ruang kosong yang lapang, garis rambut, dan tipografi tenang. Untuk acara yang ingin bicara pelan.",
-  "islami-nurani":
-    "Teal dalam, lengkungan arabesque, dan kutipan Ar-Rum 21. Sakral dan hangat dalam satu napas.",
-  "vintage-sepia":
-    "Kertas tua, burgundy, perangko, dan bingkai ganda. Seperti membuka surat dari masa lalu.",
-  "animasi-kinetic":
-    "Gradien hidup, orb 3D, parallax, dan marquee. Undangan yang terasa seperti pengalaman.",
-  "game-levelup":
-    "UI pixel, quest log, dan EXP bar. Untuk perayaan yang ingin terasa seperti petualangan.",
+  "lilac-flower": "Bunga lilac botani warna pastel lembut, aksen lavender, dan bingkai bunga yang elegan.",
+  "cypress-linen": "Tekstur linen hangat, sage green, dan garis minimalis yang menenangkan.",
+  "cypress-elegan": "Mewah dengan sentuhan ivory, sage gold, dan garis art-deco yang anggun.",
+  "arabix": "Lengkungan kubah teal dalam, bingkai emas arabesque, dan kutipan sakral.",
+  "arabian-gold-pattern": "Pola geometris emas di atas latar navy gelap. Sakral dan mewah.",
+  "film-roll": "Frame perforasi film sinema, label scene, tiket admit-one, dan nuansa vintage sepia.",
+  "film-roll-cinematic": "Nuansa film sinematik dengan grain overlay, efek parallax, dan bar sinema.",
+  "whimsical-colorful": "Warna-warni pastel yang manis, orb berkilau, dan elemen visual yang ceria.",
+  "joglo-3d-kertas": "Gaya papercraft 3D siluet Joglo Jawa, tekstur kertas tua, dan warna tanah sakral.",
+  "playful-playdate": "UI piksel cerah, log misi, EXP bar, dan nuansa game retro 8-bit.",
+  "joglo-adat": "Ornamen batik maroon & emas, siluet atap Joglo Jawa, dan sapaan tradisional.",
+  "cypress-minimal": "Ruang putih lapang, garis halus, dan tipografi serif yang tenang.",
+  "warm-story": "Warna tanah terracotta, kartu cerita mengalir, hangat dan fleksibel untuk semua acara.",
+  "editorial-dark": "Latar charcoal gelap, aksen kuningan, dan tata letak majalah editorial yang dramatis.",
 };
 
 const fits: Record<string, TemplateEventFit[]> = {
-  "islami-nurani": ["wedding"],
-  "adat-sekar": ["wedding"],
-  "floral-ivory": ["wedding", "other"],
-  "elegan-maison": ["wedding", "other"],
-  "dark-noir": ["wedding", "other"],
-  "fleksibel-cerita": ["wedding", "other"],
-  "minimalis-lumen": ["wedding", "other"],
-  "vintage-sepia": ["wedding", "other"],
-  "animasi-kinetic": ["wedding", "other"],
-  "game-levelup": ["other", "wedding"],
+  "lilac-flower": ["wedding"],
+  "cypress-linen": ["wedding", "other"],
+  "cypress-elegan": ["wedding", "other"],
+  "arabix": ["wedding"],
+  "arabian-gold-pattern": ["wedding"],
+  "film-roll": ["wedding", "other"],
+  "film-roll-cinematic": ["wedding", "other"],
+  "whimsical-colorful": ["wedding", "other"],
+  "joglo-3d-kertas": ["wedding"],
+  "playful-playdate": ["other", "wedding"],
+  "joglo-adat": ["wedding"],
+  "cypress-minimal": ["wedding", "other"],
+  "warm-story": ["wedding", "other"],
+  "editorial-dark": ["wedding", "other"],
 };
 
 /** Catalogue metadata. Kept free of renderer imports so marketing pages stay light. */

@@ -9,6 +9,22 @@ import { IslamiNurani } from "./islami-nurani";
 import { VintageSepia } from "./vintage-sepia";
 import { AnimasiKinetic } from "./animasi-kinetic";
 import { GameLevelUp } from "./game-levelup";
+
+import { LilacFlower } from "./lilac-flower";
+import { CypressLinen } from "./cypress-linen";
+import { CypressElegan } from "./cypress-elegan";
+import { Arabix } from "./arabix";
+import { ArabianGoldPattern } from "./arabian-gold-pattern";
+import { FilmRoll } from "./film-roll";
+import { FilmRollCinematic } from "./film-roll-cinematic";
+import { WhimsicalColorful } from "./whimsical-colorful";
+import { Joglo3DKertas } from "./joglo-3d-kertas";
+import { PlayfulPlaydate } from "./playful-playdate";
+import { JogloAdat } from "./joglo-adat";
+import { CypressMinimal } from "./cypress-minimal";
+import { WarmStory } from "./warm-story";
+import { EditorialDark } from "./editorial-dark";
+
 import { templateCatalog, type TemplateCatalogEntry } from "./catalog";
 import { TEMPLATE_ALIASES, canonicalTemplateSlug } from "./shared/theme";
 import type { TemplateRenderer, TemplateRenderProps } from "./types";
@@ -22,6 +38,22 @@ export interface TemplateMetadata extends TemplateCatalogEntry {
 }
 
 const renderers: Record<string, TemplateRenderer> = {
+  "lilac-flower": LilacFlower,
+  "cypress-linen": CypressLinen,
+  "cypress-elegan": CypressElegan,
+  "arabix": Arabix,
+  "arabian-gold-pattern": ArabianGoldPattern,
+  "film-roll": FilmRoll,
+  "film-roll-cinematic": FilmRollCinematic,
+  "whimsical-colorful": WhimsicalColorful,
+  "joglo-3d-kertas": Joglo3DKertas,
+  "playful-playdate": PlayfulPlaydate,
+  "joglo-adat": JogloAdat,
+  "cypress-minimal": CypressMinimal,
+  "warm-story": WarmStory,
+  "editorial-dark": EditorialDark,
+  
+  // Legacy mappings
   "floral-ivory": FloralIvory,
   "elegan-maison": EleganMaison,
   "dark-noir": DarkNoir,
@@ -37,7 +69,7 @@ const renderers: Record<string, TemplateRenderer> = {
 export const registry: Record<string, TemplateMetadata> = Object.fromEntries(
   templateCatalog.map((entry) => [
     entry.slug,
-    { ...entry, renderer: renderers[entry.slug] },
+    { ...entry, renderer: renderers[entry.slug] ?? FloralIvory },
   ]),
 );
 
