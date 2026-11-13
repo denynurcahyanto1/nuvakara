@@ -76,7 +76,7 @@ export function Pricing({ plans }: PricingProps) {
               ))}
             </Stagger>
 
-            <p className="mt-6 text-center text-xs text-muted">
+            <p className="mt-6 text-center text-xs text-slate-600">
               Pembayaran belum tersedia — paket yang dipilih langsung aktif tanpa
               transaksi apa pun.
             </p>
