@@ -42,7 +42,7 @@ export const siteConfig = {
       id: "guestbook",
       title: "Guestbook",
       description:
-        "Kumpulkan ucapan dan doa dari tamu di satu halaman, dengan moderasi sebelum tampil.",
+        "Kumpulkan ucapan dan doa dari tamu di satu halaman, langsung tampil di undangan Anda.",
       icon: "guestbook",
     },
     {

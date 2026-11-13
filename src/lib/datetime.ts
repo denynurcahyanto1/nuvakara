@@ -47,3 +47,14 @@ export function eventInputToIsoString(value: string | null): string | null {
   const date = new Date(`${value}:00${JAKARTA_OFFSET}`);
   return Number.isNaN(date.getTime()) ? null : date.toISOString();
 }
+
+/**
+ * Seconds between now and the target. Called while rendering a server
+ * component so the first paint of the countdown is already correct.
+ */
+export function secondsUntil(target: string | null | undefined): number {
+  if (!target) return 0;
+  const date = new Date(target);
+  if (Number.isNaN(date.getTime())) return 0;
+  return Math.max(0, Math.floor((date.getTime() - Date.now()) / 1000));
+}

@@ -1,7 +1,8 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import {
   eventInputToIsoString,
   formatEventDate,
+  secondsUntil,
   toEventInputValue,
 } from "@/lib/datetime";
 
@@ -36,5 +37,17 @@ describe("datetime helpers (Asia/Jakarta)", () => {
   test("returns null for an empty datetime-local value", () => {
     expect(eventInputToIsoString("")).toBeNull();
     expect(eventInputToIsoString(null)).toBeNull();
+  });
+
+  test("computes the first-paint countdown and clamps past events", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-12-11T03:00:00Z"));
+
+    expect(secondsUntil("2026-12-12T03:00:00Z")).toBe(86_400);
+    expect(secondsUntil("2020-01-01T00:00:00Z")).toBe(0);
+    expect(secondsUntil(null)).toBe(0);
+    expect(secondsUntil("not-a-date")).toBe(0);
+
+    vi.useRealTimers();
   });
 });

@@ -1,10 +1,10 @@
-import React from 'react';
+﻿import React from 'react';
 import { TemplateComponentProps } from '../registry';
 import { Countdown } from '../shared/Countdown';
 import { Gallery } from '../shared/Gallery';
 import { MapEmbed } from '../shared/MapEmbed';
 import { MusicPlayer } from '../shared/MusicPlayer';
-import { formatEventDate } from '@/lib/datetime';
+import { formatEventDate, secondsUntil } from '@/lib/datetime';
 
 export const BirthdayCelebration: React.FC<TemplateComponentProps> = ({ data }) => {
   const title = (data.title as string) || "Let's Celebrate!";
@@ -34,10 +34,7 @@ export const BirthdayCelebration: React.FC<TemplateComponentProps> = ({ data }) 
         <div className="p-6 bg-white/80 backdrop-blur-md rounded-2xl shadow-lg border-2 border-purple-200">
           <Countdown
             targetDate={date}
-            initialSeconds={Math.max(
-              0,
-              Math.floor((new Date(date).getTime() - Date.now()) / 1000),
-            )}
+            initialSeconds={secondsUntil(date)}
           />
         </div>
       </header>

@@ -1,4 +1,4 @@
-import { getEventBySlug, getRSVPs, getGuestbook } from "@/lib/dal/events";
+import { getEventBySlug, getGuestbook } from "@/lib/dal/events";
 import { TemplateDispatcher } from "@/components/templates/registry";
 import { RSVPForm } from "@/components/templates/shared/RSVPForm";
 import { Guestbook } from "@/components/templates/shared/Guestbook";

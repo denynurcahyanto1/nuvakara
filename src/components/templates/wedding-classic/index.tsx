@@ -1,10 +1,10 @@
-import React from 'react';
+﻿import React from 'react';
 import { TemplateComponentProps } from '../registry';
 import { Countdown } from '../shared/Countdown';
 import { Gallery } from '../shared/Gallery';
 import { MapEmbed } from '../shared/MapEmbed';
 import { MusicPlayer } from '../shared/MusicPlayer';
-import { formatEventDate } from '@/lib/datetime';
+import { formatEventDate, secondsUntil } from '@/lib/datetime';
 
 export const WeddingClassic: React.FC<TemplateComponentProps> = ({ data }) => {
   const title = (data.title as string) || 'The Wedding of Romeo & Juliet';
@@ -32,10 +32,7 @@ export const WeddingClassic: React.FC<TemplateComponentProps> = ({ data }) => {
         <div className="p-6 bg-white/60 backdrop-blur-sm rounded-lg border border-[#D4AF37]/20 shadow-sm">
           <Countdown
             targetDate={date}
-            initialSeconds={Math.max(
-              0,
-              Math.floor((new Date(date).getTime() - Date.now()) / 1000),
-            )}
+            initialSeconds={secondsUntil(date)}
           />
         </div>
       </header>
