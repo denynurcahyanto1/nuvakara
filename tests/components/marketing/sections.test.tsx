@@ -23,22 +23,22 @@ describe("Features", () => {
 describe("TemplateShowcase", () => {
   it("merender semua template dengan tombol preview dan gunakan", () => {
     render(<TemplateShowcase templates={templatePreviews} />);
-    expect(screen.getAllByRole("article")).toHaveLength(10);
-    expect(screen.getAllByRole("link", { name: /preview/i })).toHaveLength(10);
-    expect(screen.getAllByRole("link", { name: /^gunakan$/i })).toHaveLength(10);
+    expect(screen.getAllByRole("article")).toHaveLength(14);
+    expect(screen.getAllByRole("link", { name: /preview/i })).toHaveLength(14);
+    expect(screen.getAllByRole("link", { name: /^gunakan$/i })).toHaveLength(14);
   });
 
   it("mengarahkan ke template yang dipilih saat memakai template", () => {
     render(<TemplateShowcase templates={templatePreviews} />);
     expect(
       screen.getAllByRole("link", { name: /^gunakan$/i })[0],
-    ).toHaveAttribute("href", "/register?template=floral-ivory");
+    ).toHaveAttribute("href", "/register?template=lilac-flower");
   });
 
   it("membatasi jumlah kartu di beranda dan menautkan katalog lengkap", () => {
     render(<TemplateShowcase templates={templatePreviews} limit={6} />);
     expect(screen.getAllByRole("article")).toHaveLength(6);
-    expect(screen.getByRole("link", { name: /lihat semua 10 desain/i })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: /lihat semua 14 desain/i })).toHaveAttribute(
       "href",
       "/template",
     );

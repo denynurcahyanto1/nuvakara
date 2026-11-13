@@ -58,40 +58,40 @@ export function Hero() {
         <Reveal delay={0.2} className="relative w-full max-w-md lg:max-w-sm">
           <div className="relative aspect-[4/5] w-full">
             <FloatingDecor
-              className="left-0 top-6 h-24 w-24 rounded-3xl border border-gold/40 bg-white/80 p-3 shadow-[var(--shadow-soft)] backdrop-blur"
+              className="-left-3 top-2 z-20 flex h-20 w-20 items-center justify-center rounded-2xl border border-gold/40 bg-white/90 p-3 shadow-[var(--shadow-soft)] backdrop-blur"
               amplitude={14}
             >
               <Image
                 src="/brand/nuvakara-mark.png"
                 alt=""
-                width={72}
-                height={63}
+                width={56}
+                height={49}
                 className="h-auto w-auto"
               />
             </FloatingDecor>
 
-            <div className="absolute inset-x-6 top-10 rounded-[var(--radius-card)] border border-navy/10 bg-white/90 p-6 shadow-[var(--shadow-soft)] backdrop-blur">
+            <div className="relative z-10 mt-6 rounded-[var(--radius-card)] border border-navy/10 bg-white/90 p-6 shadow-[var(--shadow-soft)] backdrop-blur">
               <p className="text-xs tracking-[0.3em] text-gold-deep uppercase">
                 The Wedding Of
               </p>
               <p className="mt-2 font-display text-3xl text-navy">Rafi &amp; Aisyah</p>
               <div className="mt-4 h-px w-full bg-gradient-to-r from-transparent via-gold to-transparent" />
               <p className="mt-4 text-sm text-navy/70">
-                Sabtu, 12 Desember 2026 Â· 10:00 WIB
+                Sabtu, 12 Desember 2026 · 10:00 WIB
               </p>
               <p className="text-sm text-navy/70">Grand Ballroom, Jakarta</p>
             </div>
 
             <FloatingDecor
-              className="-right-2 bottom-8 flex h-20 w-20 items-center justify-center rounded-full bg-navy text-gold shadow-[var(--shadow-soft)]"
+              className="-right-3 -bottom-4 z-20 flex h-16 w-16 items-center justify-center rounded-full bg-navy text-gold shadow-[var(--shadow-soft)]"
               delay={0.6}
               amplitude={18}
             >
               <Image
                 src="/brand/nuvakara-mark.png"
                 alt=""
-                width={48}
-                height={42}
+                width={36}
+                height={32}
                 className="h-auto w-auto"
               />
             </FloatingDecor>

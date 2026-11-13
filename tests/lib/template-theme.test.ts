@@ -8,24 +8,29 @@ import {
 } from "@/components/templates/shared/theme";
 
 const CANONICAL_SLUGS = [
-  "floral-ivory",
-  "elegan-maison",
-  "dark-noir",
-  "fleksibel-cerita",
-  "adat-sekar",
-  "minimalis-lumen",
-  "islami-nurani",
-  "vintage-sepia",
-  "animasi-kinetic",
-  "game-levelup",
+  "lilac-flower",
+  "cypress-linen",
+  "cypress-elegan",
+  "arabix",
+  "arabian-gold-pattern",
+  "film-roll",
+  "film-roll-cinematic",
+  "whimsical-colorful",
+  "joglo-3d-kertas",
+  "playful-playdate",
+  "joglo-adat",
+  "cypress-minimal",
+  "warm-story",
+  "editorial-dark",
 ];
 
 describe("template themes", () => {
   test("ships one theme per design category", () => {
-    expect(Object.keys(themes)).toHaveLength(10);
+    expect(Object.keys(themes)).toHaveLength(14);
     for (const slug of CANONICAL_SLUGS) {
       expect(themes[slug], slug).toBeDefined();
     }
+    // Categories are: "Floral", "Elegan", "Islami", "Vintage", "Animasi & 3D", "Game", "Adat", "Minimalis", "Desain fleksibel", "Dark & moody" (10 total)
     expect(new Set(Object.values(themes).map((theme) => theme.category)).size).toBe(10);
   });
 
@@ -60,6 +65,6 @@ describe("template themes", () => {
 
   test("unknown slugs fall back to the brand theme instead of throwing", () => {
     expect(canonicalTemplateSlug("does-not-exist")).toBeNull();
-    expect(resolveTheme("does-not-exist").slug).toBe("floral-ivory");
+    expect(resolveTheme("does-not-exist").slug).toBe("lilac-flower");
   });
 });

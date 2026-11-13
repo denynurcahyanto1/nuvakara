@@ -61,7 +61,22 @@ export function ArabianGoldPattern({ data, eventId, messages = [], mode = "live"
         ) : null}
 
         <div className="mt-20">
-            <GiftInfo gift={data.gift} />
+            
+        {data.mapUrl ? (
+          <section id="lokasi" className="mt-20">
+            <Reveal>
+              <MapEmbed
+                url={data.mapUrl}
+                href={data.mapsLink}
+                venue={data.venue}
+                address={data.address}
+                city={data.city}
+              />
+            </Reveal>
+          </section>
+        ) : null}
+
+        <GiftInfo gift={data.gift} />
             <RSVPForm eventId={eventId} readOnly={mode === "preview"} />
             <Guestbook eventId={eventId} messages={messages} readOnly={mode === "preview"} />
         </div>

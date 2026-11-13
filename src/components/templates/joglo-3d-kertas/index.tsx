@@ -60,6 +60,20 @@ export function Joglo3DKertas({ data, eventId, messages = [], mode = "live" }: T
           </section>
         ) : null}
 
+        {data.mapUrl ? (
+          <section id="lokasi" className="mt-20">
+            <Reveal>
+              <MapEmbed
+                url={data.mapUrl}
+                href={data.mapsLink}
+                venue={data.venue}
+                address={data.address}
+                city={data.city}
+              />
+            </Reveal>
+          </section>
+        ) : null}
+
         <div className="mt-20">
             <GiftInfo gift={data.gift} />
             <RSVPForm eventId={eventId} readOnly={mode === "preview"} />

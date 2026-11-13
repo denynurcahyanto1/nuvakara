@@ -10,7 +10,8 @@ import {
 describe("Template Registry", () => {
   test("registers one design per category", () => {
     const entries = Object.values(registry);
-    expect(entries).toHaveLength(10);
+    expect(entries).toHaveLength(14);
+    // 10 unique categories
     expect(new Set(entries.map((entry) => entry.category)).size).toBe(10);
     for (const entry of entries) {
       expect(entry.name, entry.slug).toBeTruthy();
@@ -32,10 +33,10 @@ describe("Template Registry", () => {
 
   test("legacy event slugs resolve to the new designs", () => {
     expect(TEMPLATE_ALIASES).toEqual({
-      "wedding-classic": "floral-ivory",
-      "birthday-celebration": "fleksibel-cerita",
-      "baby-shower": "minimalis-lumen",
-      "graduation-modern": "dark-noir",
+      "wedding-classic": "lilac-flower",
+      "birthday-celebration": "warm-story",
+      "baby-shower": "cypress-minimal",
+      "graduation-modern": "editorial-dark",
     });
 
     for (const [legacy, canonical] of Object.entries(TEMPLATE_ALIASES)) {

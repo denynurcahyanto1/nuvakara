@@ -47,12 +47,12 @@ export interface TemplateTheme {
   tone: "light" | "dark";
 }
 
-/** Old slugs stored on existing events. */
+/** Old slugs stored on existing events. Mapped to new 14-template design system. */
 export const TEMPLATE_ALIASES: Record<string, string> = {
-  "wedding-classic": "floral-ivory",
-  "birthday-celebration": "fleksibel-cerita",
-  "baby-shower": "minimalis-lumen",
-  "graduation-modern": "dark-noir",
+  "wedding-classic": "lilac-flower",
+  "birthday-celebration": "warm-story",
+  "baby-shower": "cypress-minimal",
+  "graduation-modern": "editorial-dark",
 };
 
 const serif = "var(--font-cormorant), ui-serif, Georgia, serif";

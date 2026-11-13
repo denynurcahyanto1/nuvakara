@@ -146,9 +146,9 @@ export const siteConfig = {
       },
     ] as { title: string; links: NavLink[] }[],
     contact: {
-      email: "halo@nuvakara.com",
+      email: "nuvakaraofficial@gmail.com",
       phone: "+62 812 0000 0000",
-      address: "Jakarta, Indonesia",
+      address: "Karanganyar, Indonesia",
     },
     socials: [
       { label: "Instagram", href: "https://instagram.com" },
