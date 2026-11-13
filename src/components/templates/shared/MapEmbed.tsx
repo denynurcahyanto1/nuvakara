@@ -1,4 +1,5 @@
 import React from "react";
+import { cn } from "@/lib/cn";
 
 interface MapEmbedProps {
   url: string;
@@ -7,6 +8,8 @@ interface MapEmbedProps {
   venue?: string;
   address?: string;
   city?: string;
+  /** Matches the surrounding invitation palette. */
+  tone?: "light" | "dark";
 }
 
 /** Strips the embed-only flag so the same URL can open in a normal tab. */
@@ -27,6 +30,7 @@ export const MapEmbed: React.FC<MapEmbedProps> = ({
   venue,
   address,
   city,
+  tone = "light",
 }) => {
   const lines = [address, city].filter(Boolean).join(", ");
   const query = [venue, address, city].filter(Boolean).join(", ");
@@ -35,10 +39,11 @@ export const MapEmbed: React.FC<MapEmbedProps> = ({
     (query
       ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
       : toExternalUrl(url));
+  const dark = tone === "dark";
 
   return (
     <figure className="w-full">
-      <div className="h-64 w-full bg-[#E8E1D3]">
+      <div className={cn("h-64 w-full", dark ? "bg-[#17181A]" : "bg-[#E8E1D3]")}>
         <iframe
           src={url}
           width="100%"
@@ -51,22 +56,44 @@ export const MapEmbed: React.FC<MapEmbedProps> = ({
         />
       </div>
 
-      <figcaption className="flex flex-wrap items-center justify-between gap-3 bg-[#FBF7F0] px-4 py-3 text-left">
+      <figcaption
+        className={cn(
+          "flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-left",
+          dark ? "bg-[#111214]" : "bg-[#FBF7F0]",
+        )}
+      >
         <div className="min-w-0">
           {venue ? (
-            <p className="truncate font-serif text-base text-[#141C2B]">
+            <p
+              className={cn(
+                "truncate font-serif text-base",
+                dark ? "text-[#F3F4F6]" : "text-[#141C2B]",
+              )}
+            >
               {venue}
             </p>
           ) : null}
           {lines ? (
-            <p className="truncate text-xs text-[#141C2B]/60">{lines}</p>
+            <p
+              className={cn(
+                "truncate text-xs",
+                dark ? "text-[#F3F4F6]/55" : "text-[#141C2B]/60",
+              )}
+            >
+              {lines}
+            </p>
           ) : null}
         </div>
         <a
           href={externalUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="shrink-0 rounded-full border border-[#C6A15B]/50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#7D5F28] transition hover:bg-[#C6A15B]/15"
+          className={cn(
+            "shrink-0 rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] transition",
+            dark
+              ? "border-[#E5A93C]/50 text-[#E5A93C] hover:bg-[#E5A93C]/15"
+              : "border-[#C6A15B]/50 text-[#7D5F28] hover:bg-[#C6A15B]/15",
+          )}
         >
           Buka di Google Maps
         </a>

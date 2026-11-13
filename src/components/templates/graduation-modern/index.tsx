@@ -68,7 +68,7 @@ export const GraduationModern: React.FC<TemplateComponentProps> = ({ data }) => 
           <section className="space-y-6">
             <h2 className="text-sm font-semibold tracking-widest text-[#E5A93C] uppercase text-center">Location & Access</h2>
             <div className="rounded-2xl overflow-hidden border border-neutral-800 shadow-2xl">
-              <MapEmbed url={mapUrl} href={mapsLink} venue={venue} address={address} city={city} />
+              <MapEmbed url={mapUrl} href={mapsLink} venue={venue} address={address} city={city} tone="dark" />
             </div>
           </section>
         )}

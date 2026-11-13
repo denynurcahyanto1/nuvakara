@@ -86,7 +86,7 @@ export function TemplateShowcase({ templates }: TemplateShowcaseProps) {
 
                     <div className="mt-5 flex flex-col gap-2 sm:flex-row">
                       <Link
-                        href={`/invite/${template.slug}`}
+                        href={`/template/${template.slug}`}
                         className="inline-flex h-11 flex-1 items-center justify-center rounded-full border border-navy/15 px-5 text-sm font-medium text-navy transition-colors hover:bg-navy/5"
                       >
                         Preview
