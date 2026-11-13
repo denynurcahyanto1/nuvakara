@@ -29,7 +29,13 @@ export const WeddingClassic: React.FC<TemplateComponentProps> = ({ data }) => {
           {description}
         </p>
         <div className="p-6 bg-white/60 backdrop-blur-sm rounded-lg border border-[#D4AF37]/20 shadow-sm">
-          <Countdown targetDate={date} />
+          <Countdown
+            targetDate={date}
+            initialSeconds={Math.max(
+              0,
+              Math.floor((new Date(date).getTime() - Date.now()) / 1000),
+            )}
+          />
         </div>
       </header>
 

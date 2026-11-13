@@ -31,7 +31,13 @@ export const BabyShower: React.FC<TemplateComponentProps> = ({ data }) => {
           {description}
         </p>
         <div className="p-6 bg-white/90 backdrop-blur-sm rounded-3xl shadow-sm border border-emerald-100/60">
-          <Countdown targetDate={date} />
+          <Countdown
+            targetDate={date}
+            initialSeconds={Math.max(
+              0,
+              Math.floor((new Date(date).getTime() - Date.now()) / 1000),
+            )}
+          />
         </div>
       </header>
 

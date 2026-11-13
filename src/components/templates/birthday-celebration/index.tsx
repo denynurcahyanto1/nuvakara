@@ -31,7 +31,13 @@ export const BirthdayCelebration: React.FC<TemplateComponentProps> = ({ data }) 
           {description}
         </p>
         <div className="p-6 bg-white/80 backdrop-blur-md rounded-2xl shadow-lg border-2 border-purple-200">
-          <Countdown targetDate={date} />
+          <Countdown
+            targetDate={date}
+            initialSeconds={Math.max(
+              0,
+              Math.floor((new Date(date).getTime() - Date.now()) / 1000),
+            )}
+          />
         </div>
       </header>
 

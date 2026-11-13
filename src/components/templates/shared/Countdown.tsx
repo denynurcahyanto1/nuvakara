@@ -4,32 +4,58 @@ import React, { useState, useEffect } from 'react';
 
 interface CountdownProps {
   targetDate: string;
+  /** Seconds left at server render, so guests never see a fake "0 days". */
+  initialSeconds?: number;
 }
 
-export const Countdown: React.FC<CountdownProps> = ({ targetDate }) => {
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+interface TimeLeft {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+}
+
+const UNITS: { key: keyof TimeLeft; label: string }[] = [
+  { key: 'days', label: 'Hari' },
+  { key: 'hours', label: 'Jam' },
+  { key: 'minutes', label: 'Menit' },
+  { key: 'seconds', label: 'Detik' },
+];
+
+function split(totalSeconds: number): TimeLeft {
+  const safe = Math.max(0, Math.floor(totalSeconds));
+  return {
+    days: Math.floor(safe / 86_400),
+    hours: Math.floor((safe / 3_600) % 24),
+    minutes: Math.floor((safe / 60) % 60),
+    seconds: safe % 60,
+  };
+}
+
+function secondsUntil(targetDate: string): number {
+  return Math.max(0, Math.floor((new Date(targetDate).getTime() - Date.now()) / 1000));
+}
+
+export const Countdown: React.FC<CountdownProps> = ({ targetDate, initialSeconds }) => {
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>(() =>
+    split(initialSeconds ?? secondsUntil(targetDate)),
+  );
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      const difference = +new Date(targetDate) - +new Date();
-      if (difference > 0) {
-        setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60),
-        });
-      }
-    }, 1000);
+    const update = () => setTimeLeft(split(secondsUntil(targetDate)));
+    update();
+    const timer = setInterval(update, 1000);
     return () => clearInterval(timer);
   }, [targetDate]);
 
   return (
-    <div className="flex gap-4">
-      {Object.entries(timeLeft).map(([unit, value]) => (
-        <div key={unit} className="flex flex-col items-center">
-          <span className="text-2xl font-bold">{value}</span>
-          <span className="text-xs uppercase">{unit}</span>
+    <div className="flex gap-4" role="timer" aria-label="Hitung mundur acara">
+      {UNITS.map(({ key, label }) => (
+        <div key={key} className="flex flex-col items-center">
+          <span className="text-2xl font-bold tabular-nums">
+            {String(timeLeft[key]).padStart(2, '0')}
+          </span>
+          <span className="text-xs uppercase">{label}</span>
         </div>
       ))}
     </div>
