@@ -1,4 +1,4 @@
-import { getEventById } from "@/lib/dal/events";
+import { getEventById, getGuestbook } from "@/lib/dal/events";
 import { TemplateDispatcher } from "@/components/templates/registry";
 import { eventToTemplateData } from "@/lib/templates-data";
 import { notFound } from "next/navigation";
@@ -31,10 +31,11 @@ export default async function PreviewPage({ params }: Props) {
   }
 
   const templateData = eventToTemplateData(event);
+  const messages = await getGuestbook(event.id);
 
   return (
     <div>
-      <div className="sticky top-0 z-50 flex items-center justify-between gap-3 border-b border-[#C6A15B]/30 bg-[#141C2B] px-4 py-2.5 text-[#FBF7F0]">
+      <div className="sticky top-0 z-[90] flex items-center justify-between gap-3 border-b border-[#C6A15B]/30 bg-[#141C2B] px-4 py-2.5 text-[#FBF7F0]">
         <p className="text-xs uppercase tracking-[0.2em] text-[#E3C68D]">
           Pratinjau {event.is_published ? "Publik" : "Draft"}
         </p>
@@ -46,8 +47,11 @@ export default async function PreviewPage({ params }: Props) {
         </a>
       </div>
       <TemplateDispatcher
-        slug={event.template_slug || "wedding-classic"}
-        data={templateData as unknown as Record<string, unknown>}
+        slug={event.template_slug || "floral-ivory"}
+        data={templateData}
+        eventId={event.id}
+        messages={messages}
+        mode="preview"
       />
     </div>
   );

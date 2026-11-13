@@ -19,6 +19,33 @@ export function formatEventDate(value: string | null | undefined): string {
   }).format(date);
 }
 
+/** "18.00 WIB" — empty string for invalid dates. */
+export function formatEventTime(value: string | null | undefined): string {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const time = new Intl.DateTimeFormat("id-ID", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: EVENT_TIME_ZONE,
+  }).format(date);
+  return `${time.replace(":", ".")} WIB`;
+}
+
+/** "12 Desember 2026" — the compact form used on covers and hero headers. */
+export function formatEventDateCompact(value: string | null | undefined): string {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return new Intl.DateTimeFormat("id-ID", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: EVENT_TIME_ZONE,
+  }).format(date);
+}
+
 /** `timestamptz` -> value accepted by `<input type="datetime-local">` (WIB). */
 export function toEventInputValue(value: string | null): string {
   if (!value) return "";

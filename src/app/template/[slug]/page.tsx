@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { registry, TemplateDispatcher } from "@/components/templates/registry";
+import { getTemplate, TemplateDispatcher } from "@/components/templates/registry";
 import { demoTemplateData } from "@/lib/templates-demo";
 
 interface Props {
@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const template = registry[slug];
+  const template = getTemplate(slug);
   if (!template) return { title: "Template tidak ditemukan" };
 
   return {
@@ -21,10 +21,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+const sampleMessages = [
+  {
+    name: "Dinda & Reza",
+    content: "Selamat! Semoga hari besarnya berjalan lancar dan penuh berkah.",
+  },
+  {
+    name: "Keluarga Wardhana",
+    content: "Terima kasih sudah mengundang. Kami akan hadir dengan senang hati.",
+  },
+];
+
 export default async function TemplatePreviewPage({ params }: Props) {
   const { slug } = await params;
-  const template = registry[slug];
-  const data = demoTemplateData[slug];
+  const template = getTemplate(slug);
+  const data = template ? demoTemplateData[template.slug] : undefined;
 
   if (!template || !data) {
     notFound();
@@ -32,9 +43,9 @@ export default async function TemplatePreviewPage({ params }: Props) {
 
   return (
     <div>
-      <div className="sticky top-0 z-50 flex flex-wrap items-center justify-between gap-2 border-b border-[#C6A15B]/30 bg-[#141C2B] px-4 py-2.5 text-[#FBF7F0]">
+      <div className="sticky top-0 z-[90] flex flex-wrap items-center justify-between gap-2 border-b border-[#C6A15B]/30 bg-[#141C2B] px-4 py-2.5 text-[#FBF7F0]">
         <p className="text-[11px] uppercase tracking-[0.2em] text-[#E3C68D]">
-          Pratinjau &middot; {template.name}
+          Pratinjau &middot; {template.name} &middot; {template.category}
         </p>
         <div className="flex items-center gap-2">
           <Link
@@ -54,7 +65,9 @@ export default async function TemplatePreviewPage({ params }: Props) {
 
       <TemplateDispatcher
         slug={template.slug}
-        data={data as unknown as Record<string, unknown>}
+        data={data}
+        messages={sampleMessages}
+        mode="preview"
       />
 
       <div className="border-t border-[#C6A15B]/20 bg-[#FBF7F0] px-4 py-10 text-center">

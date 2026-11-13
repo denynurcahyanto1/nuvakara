@@ -1,37 +1,85 @@
-import React from 'react';
-import { WeddingClassic } from './wedding-classic';
-import { BirthdayCelebration } from './birthday-celebration';
-import { BabyShower } from './baby-shower';
-import { GraduationModern } from './graduation-modern';
+import React from "react";
+import { FloralIvory } from "./floral-ivory";
+import { EleganMaison } from "./elegan-maison";
+import { DarkNoir } from "./dark-noir";
+import { FleksibelCerita } from "./fleksibel-cerita";
+import { AdatSekar } from "./adat-sekar";
+import { MinimalisLumen } from "./minimalis-lumen";
+import { IslamiNurani } from "./islami-nurani";
+import { VintageSepia } from "./vintage-sepia";
+import { AnimasiKinetic } from "./animasi-kinetic";
+import { GameLevelUp } from "./game-levelup";
+import { templateCatalog, type TemplateCatalogEntry } from "./catalog";
+import { TEMPLATE_ALIASES, canonicalTemplateSlug } from "./shared/theme";
+import type { TemplateRenderer, TemplateRenderProps } from "./types";
 
-export interface TemplateComponentProps {
-  data: Record<string, unknown>;
-}
+export type { TemplateRenderProps, TemplateRenderer };
+export type { TemplateEventFit } from "./catalog";
+export { TEMPLATE_ALIASES };
 
-export type TemplateRenderer = React.FC<TemplateComponentProps>;
-
-export interface TemplateMetadata {
-  slug: string;
-  name: string;
+export interface TemplateMetadata extends TemplateCatalogEntry {
   renderer: TemplateRenderer;
 }
 
-const FallbackRenderer: TemplateRenderer = () => {
-  return React.createElement('div', null, 'Template not found');
+const renderers: Record<string, TemplateRenderer> = {
+  "floral-ivory": FloralIvory,
+  "elegan-maison": EleganMaison,
+  "dark-noir": DarkNoir,
+  "fleksibel-cerita": FleksibelCerita,
+  "adat-sekar": AdatSekar,
+  "minimalis-lumen": MinimalisLumen,
+  "islami-nurani": IslamiNurani,
+  "vintage-sepia": VintageSepia,
+  "animasi-kinetic": AnimasiKinetic,
+  "game-levelup": GameLevelUp,
 };
 
-export const registry: Record<string, TemplateMetadata> = {
-  'wedding-classic': { slug: 'wedding-classic', name: 'Wedding Classic', renderer: WeddingClassic },
-  'birthday-celebration': { slug: 'birthday-celebration', name: 'Birthday Celebration', renderer: BirthdayCelebration },
-  'baby-shower': { slug: 'baby-shower', name: 'Baby Shower', renderer: BabyShower },
-  'graduation-modern': { slug: 'graduation-modern', name: 'Graduation Modern', renderer: GraduationModern },
-};
+export const registry: Record<string, TemplateMetadata> = Object.fromEntries(
+  templateCatalog.map((entry) => [
+    entry.slug,
+    { ...entry, renderer: renderers[entry.slug] },
+  ]),
+);
+
+const FallbackRenderer: TemplateRenderer = () =>
+  React.createElement(
+    "div",
+    {
+      style: {
+        minHeight: "100dvh",
+        display: "grid",
+        placeItems: "center",
+        padding: "2rem",
+        fontFamily: "var(--font-cormorant), Georgia, serif",
+        background: "#FBF7F0",
+        color: "#141C2B",
+        textAlign: "center",
+      },
+    },
+    "Template tidak ditemukan. Silakan hubungi pemilik undangan.",
+  );
+
+/** Canonical slug for aliases; `null` when nothing matches. */
+export function resolveTemplateSlug(slug: string): string | null {
+  return canonicalTemplateSlug(slug);
+}
+
+export function getTemplate(slug: string): TemplateMetadata | null {
+  const canonical = resolveTemplateSlug(slug);
+  return canonical ? registry[canonical] : null;
+}
 
 export const getRenderer = (slug: string): TemplateRenderer => {
-  return registry[slug]?.renderer || FallbackRenderer;
+  return getTemplate(slug)?.renderer ?? FallbackRenderer;
 };
 
-export const TemplateDispatcher: React.FC<{ slug: string; data: Record<string, unknown> }> = ({ slug, data }) => {
+export const TemplateDispatcher: React.FC<{ slug: string } & TemplateRenderProps> = ({
+  slug,
+  data,
+  eventId,
+  messages,
+  mode,
+}) => {
   const Renderer = getRenderer(slug);
-  return React.createElement(Renderer, { data });
+  return React.createElement(Renderer, { data, eventId, messages, mode });
 };

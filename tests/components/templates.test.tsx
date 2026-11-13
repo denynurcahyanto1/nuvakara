@@ -1,56 +1,73 @@
-﻿import { render, screen } from '@testing-library/react';
-import { test, describe, expect } from 'vitest';
-import { WeddingClassic } from '../../src/components/templates/wedding-classic';
-import { BirthdayCelebration } from '../../src/components/templates/birthday-celebration';
-import { BabyShower } from '../../src/components/templates/baby-shower';
-import { GraduationModern } from '../../src/components/templates/graduation-modern';
+﻿import { render, screen } from "@testing-library/react";
+import { describe, expect, test, vi } from "vitest";
+import { registry } from "@/components/templates/registry";
+import type { TemplateData } from "@/lib/templates-data";
 
-describe('Templates', () => {
-  const mockData = {
-    title: 'Custom Event Title',
-    date: '2026-12-31T18:00:00',
-    description: 'Custom celebration description',
-    venue: 'Custom Location Hall',
-    address: 'Jl. Contoh No. 1',
-    city: 'Jakarta',
-    mapUrl: 'https://maps.google.com/test',
-    musicUrl: 'https://example.com/audio.mp3',
-    images: ['https://example.com/img1.jpg', 'https://example.com/img2.jpg'],
-  };
+// The forms call server actions through `useActionState`; the network is not
+// part of these render tests.
+vi.mock("@/lib/actions/events-rsvp", () => ({
+  createRSVPAction: vi.fn(),
+  createGuestbookMessageAction: vi.fn(),
+}));
 
-  test('WeddingClassic renders mock event data and components', () => {
-    render(<WeddingClassic data={mockData} />);
-    expect(screen.getByText('Custom Event Title')).toBeDefined();
-    expect(screen.getByText('Custom celebration description')).toBeDefined();
-    expect(screen.getAllByText('Custom Location Hall').length).toBeGreaterThan(0);
-    expect(screen.getByText('Wedding Invitation')).toBeDefined();
-    expect(screen.getByTitle(/Peta lokasi/)).toBeDefined();
-  });
+const baseData: TemplateData = {
+  title: "Custom Event Title",
+  date: "2026-12-31T11:00:00Z",
+  description: "Custom celebration description",
+  venue: "Custom Location Hall",
+  address: "Jl. Contoh No. 1",
+  city: "Jakarta",
+  mapUrl: "https://maps.google.com/maps?q=Custom&output=embed",
+  musicUrl: "https://example.com/audio.mp3",
+  images: ["https://example.com/img1.jpg", "https://example.com/img2.jpg"],
+  eventType: "wedding",
+};
 
-  test('BirthdayCelebration renders mock event data and components', () => {
-    render(<BirthdayCelebration data={mockData} />);
-    expect(screen.getByText('Custom Event Title')).toBeDefined();
-    expect(screen.getByText('Custom celebration description')).toBeDefined();
-    expect(screen.getAllByText('Custom Location Hall').length).toBeGreaterThan(0);
-    expect(screen.getByText('Birthday Bash 🎉')).toBeDefined();
-    expect(screen.getByTitle(/Peta lokasi/)).toBeDefined();
-  });
+const entries = Object.values(registry);
 
-  test('BabyShower renders mock event data and components', () => {
-    render(<BabyShower data={mockData} />);
-    expect(screen.getByText('Custom Event Title')).toBeDefined();
-    expect(screen.getByText('Custom celebration description')).toBeDefined();
-    expect(screen.getAllByText('Custom Location Hall').length).toBeGreaterThan(0);
-    expect(screen.getByText('Baby Shower 🍼')).toBeDefined();
-    expect(screen.getByTitle(/Peta lokasi/)).toBeDefined();
-  });
+describe("Invitation templates", () => {
+  test.each(entries.map((entry) => [entry.slug, entry] as const))(
+    "%s renders the cover, event data, map, and a disabled preview form",
+    (_slug, template) => {
+      const Renderer = template.renderer;
+      const { container } = render(
+        <Renderer
+          data={baseData}
+          messages={[{ name: "Dinda", content: "Selamat ya!" }]}
+          mode="preview"
+        />,
+      );
 
-  test('GraduationModern renders mock event data and components', () => {
-    render(<GraduationModern data={mockData} />);
-    expect(screen.getByText('Custom Event Title')).toBeDefined();
-    expect(screen.getByText('Custom celebration description')).toBeDefined();
-    expect(screen.getAllByText('Custom Location Hall').length).toBeGreaterThan(0);
-    expect(screen.getByText('Commencement Ceremony')).toBeDefined();
-    expect(screen.getByTitle(/Peta lokasi/)).toBeDefined();
+      // Cover gate is the first thing a guest sees.
+      expect(screen.getByRole("button", { name: /Lihat Pratinjau/i })).toBeInTheDocument();
+      expect(screen.getAllByText("Custom Event Title").length).toBeGreaterThan(0);
+
+      // The map iframe is present and labelled for screen readers.
+      expect(screen.getByTitle(/Peta lokasi/)).toBeInTheDocument();
+
+      // RSVP + guestbook render as a visual preview, not a live form.
+      const notes = screen.getAllByText(/formulir aktif pada undangan asli/i);
+      expect(notes.length).toBe(2);
+      expect(screen.getByText("Selamat ya!")).toBeInTheDocument();
+
+      expect(container.querySelector(`[data-template="${template.slug}"]`)).not.toBeNull();
+    },
+  );
+
+  test("every template renders without a map, gallery, or music URL", () => {
+    const sparse: TemplateData = {
+      title: "Sparse Event",
+      date: "2026-12-31T11:00:00Z",
+      description: "",
+      venue: "Rumah",
+      images: [],
+    };
+
+    for (const template of entries) {
+      const Renderer = template.renderer;
+      const { unmount } = render(<Renderer data={sparse} mode="preview" />);
+      expect(screen.getAllByText("Sparse Event").length).toBeGreaterThan(0);
+      unmount();
+    }
   });
 });

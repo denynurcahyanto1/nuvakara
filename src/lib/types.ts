@@ -38,4 +38,8 @@ export interface TemplatePreview {
   isPremium: boolean;
   /** Short label of the template's visual identity, e.g. "Ivory & Champagne". */
   palette: string;
+  /** Basic | Premium | Eksklusif | Luxury. */
+  tier: string;
+  /** Event types the design suits. */
+  eventFit: string[];
 }

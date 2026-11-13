@@ -1,19 +1,31 @@
 import type { Metadata } from "next";
 import { CtaBanner } from "@/components/marketing/CtaBanner";
 import { PageShell } from "@/components/marketing/PageShell";
-import { TemplateShowcase } from "@/components/marketing/TemplateShowcase";
+import { TemplateCatalogue } from "@/components/marketing/TemplateCatalogue";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 import { templatePreviews } from "@/lib/templates-preview";
 
 export const metadata: Metadata = {
   title: "Template",
   description:
-    "Empat template NUVAKARA dengan karakter visual berbeda: Wedding Classic, Birthday Celebration, Baby Shower, dan Graduation Modern.",
+    "Sepuluh desain undangan NUVAKARA — floral, elegan, adat, minimalis, islami, vintage, animasi, game, dark, dan fleksibel — dengan filter gaya, paket, dan jenis acara.",
 };
 
 export default function TemplatePage() {
   return (
     <PageShell>
-      <TemplateShowcase templates={templatePreviews} />
+      <section className="bg-ivory py-16 sm:py-20">
+        <div className="container-page">
+          <SectionHeading
+            eyebrow="Katalog desain"
+            title="Temukan undangan yang terasa seperti Anda"
+            description="Sepuluh kategori desain, empat tingkatan paket. Setiap template bisa dipakai untuk pernikahan maupun acara lain — saring sesuai kebutuhan Anda."
+          />
+          <div className="mt-10">
+            <TemplateCatalogue templates={templatePreviews} />
+          </div>
+        </div>
+      </section>
       <CtaBanner />
     </PageShell>
   );

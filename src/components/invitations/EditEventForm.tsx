@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { Switch } from "@/components/ui/Switch";
 import { updateEventAction } from "@/lib/actions/events";
+import { templateCatalog } from "@/components/templates/catalog";
 import { toEventInputValue } from "@/lib/datetime";
 import { Database } from "@/types/database";
 import { AuthActionState } from "@/lib/types";
@@ -20,12 +21,10 @@ const EVENT_TYPES = [
   { value: "other", label: "Lainnya" },
 ];
 
-const TEMPLATES = [
-  { value: "wedding-classic", label: "Wedding Classic" },
-  { value: "birthday-celebration", label: "Birthday Celebration" },
-  { value: "baby-shower", label: "Baby Shower" },
-  { value: "graduation-modern", label: "Graduation Modern" },
-];
+const TEMPLATES = templateCatalog.map((template) => ({
+  value: template.slug,
+  label: `${template.category} — ${template.name} (${template.tier})`,
+}));
 
 function Section({
   eyebrow,

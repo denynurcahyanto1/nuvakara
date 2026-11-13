@@ -25,6 +25,7 @@ const LABEL = process.env.AUDIT_LABEL?.trim();
 const VIEWPORT = process.env.AUDIT_VIEWPORT?.trim() || "1280x900";
 const FULL_PAGE = process.env.AUDIT_FULL_PAGE !== "0";
 const SCROLL_Y = Number(process.env.AUDIT_SCROLL_Y || 0);
+const OPEN_COVER = process.env.AUDIT_OPEN === "1";
 mkdirSync(OUT_DIR, { recursive: true });
 
 const child = spawn(
@@ -207,6 +208,21 @@ try {
     const entry = { url, problems: [] };
     await callTool("navigate_page", { url, type: "url" });
     await sleep(2200);
+
+    if (OPEN_COVER) {
+      const opened = await callTool("evaluate_script", {
+        function: `() => {
+          const button = [...document.querySelectorAll("button")].find((el) =>
+            /buka undangan|lihat pratinjau/i.test(el.textContent || ""),
+          );
+          if (!button) return false;
+          button.click();
+          return true;
+        }`,
+      });
+      entry.coverOpened = valueOf(opened) === true;
+      await sleep(1400);
+    }
 
     try {
       await scrollThrough();

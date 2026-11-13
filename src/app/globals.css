@@ -25,6 +25,26 @@
   --shadow-glow: 0 0 0 1px rgb(198 161 91 / 0.25), 0 24px 70px -40px rgb(198 161 91 / 0.6);
 }
 
+/*
+ * Invitation tokens. `InvitationShell` overrides these on the template root;
+ * the values below are the brand default so shared blocks also render on
+ * pages without a shell.
+ */
+:root {
+  --inv-bg: var(--color-ivory);
+  --inv-surface: rgb(255 255 255 / 0.75);
+  --inv-ink: var(--color-navy);
+  --inv-muted: rgb(20 28 43 / 0.6);
+  --inv-accent: var(--color-gold-deep);
+  --inv-accent-soft: var(--color-champagne);
+  --inv-on-accent: var(--color-ivory);
+  --inv-line: rgb(20 28 43 / 0.14);
+  --inv-font-display: var(--font-display);
+  --inv-font-body: var(--font-sans);
+  --inv-radius: var(--radius-card);
+  --inv-tone: light;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -106,6 +126,15 @@
 }
 
 @layer utilities {
+  /* Invitation typography. One class so templates can switch serif/mono. */
+  .font-inv-display {
+    font-family: var(--inv-font-display);
+  }
+
+  .font-inv-body {
+    font-family: var(--inv-font-body);
+  }
+
   /* Mobile-safe viewport height (ignores collapsing browser chrome). */
   .h-dvh {
     height: 100dvh;
@@ -137,6 +166,29 @@
   }
   50% {
     transform: translate3d(2%, -3%, 0) scale(1.08);
+  }
+}
+
+/* Kinetic template: slow orbit, marquee band, and floating panel. */
+@keyframes inv-orbit {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  33% {
+    transform: translate3d(4%, -6%, 0) scale(1.06);
+  }
+  66% {
+    transform: translate3d(-5%, 4%, 0) scale(0.96);
+  }
+}
+
+@keyframes inv-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
   }
 }
 

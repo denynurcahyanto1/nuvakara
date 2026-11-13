@@ -21,18 +21,27 @@ describe("Features", () => {
 });
 
 describe("TemplateShowcase", () => {
-  it("merender 4 template dengan tombol preview dan gunakan", () => {
+  it("merender semua template dengan tombol preview dan gunakan", () => {
     render(<TemplateShowcase templates={templatePreviews} />);
-    expect(screen.getAllByRole("article")).toHaveLength(4);
-    expect(screen.getAllByRole("link", { name: /preview/i })).toHaveLength(4);
-    expect(screen.getAllByRole("link", { name: /gunakan template/i })).toHaveLength(4);
+    expect(screen.getAllByRole("article")).toHaveLength(10);
+    expect(screen.getAllByRole("link", { name: /preview/i })).toHaveLength(10);
+    expect(screen.getAllByRole("link", { name: /^gunakan$/i })).toHaveLength(10);
   });
 
   it("mengarahkan ke template yang dipilih saat memakai template", () => {
     render(<TemplateShowcase templates={templatePreviews} />);
     expect(
-      screen.getAllByRole("link", { name: /gunakan template/i })[0],
-    ).toHaveAttribute("href", "/register?template=wedding-classic");
+      screen.getAllByRole("link", { name: /^gunakan$/i })[0],
+    ).toHaveAttribute("href", "/register?template=floral-ivory");
+  });
+
+  it("membatasi jumlah kartu di beranda dan menautkan katalog lengkap", () => {
+    render(<TemplateShowcase templates={templatePreviews} limit={6} />);
+    expect(screen.getAllByRole("article")).toHaveLength(6);
+    expect(screen.getByRole("link", { name: /lihat semua 10 desain/i })).toHaveAttribute(
+      "href",
+      "/template",
+    );
   });
 });
 

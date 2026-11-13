@@ -1,23 +1,36 @@
-import React from 'react';
-import Image from 'next/image';
+import Image from "next/image";
+import { cn } from "@/lib/cn";
 
-interface GalleryProps {
+export interface GalleryProps {
   images: string[];
+  className?: string;
+  /** "mosaic" makes every third photo full width; "grid" keeps a strict grid. */
+  layout?: "mosaic" | "grid";
 }
 
-export const Gallery: React.FC<GalleryProps> = ({ images }) => {
+export function Gallery({ images, className, layout = "mosaic" }: GalleryProps) {
   return (
-    <div className="grid grid-cols-2 gap-2">
-      {images.map((src, index) => (
-        <div key={index} className="relative w-full h-48">
-          <Image
-            src={src}
-            alt={`Gallery ${index}`}
-            fill
-            className="object-cover rounded"
-          />
-        </div>
-      ))}
+    <div className={cn("grid grid-cols-2 gap-2 sm:gap-3", className)}>
+      {images.map((src, index) => {
+        const wide = layout === "mosaic" && index % 3 === 0;
+        return (
+          <figure
+            key={`${src}-${index}`}
+            className={cn(
+              "relative overflow-hidden rounded-[var(--inv-radius)] bg-[var(--inv-accent-soft)]",
+              wide ? "col-span-2 aspect-[16/10]" : "aspect-[3/4]",
+            )}
+          >
+            <Image
+              src={src}
+              alt={`Momen ${index + 1}`}
+              fill
+              sizes="(min-width: 768px) 40vw, 50vw"
+              className="object-cover transition-transform duration-700 ease-out hover:scale-[1.04]"
+            />
+          </figure>
+        );
+      })}
     </div>
   );
-};
+}

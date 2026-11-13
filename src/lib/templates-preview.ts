@@ -1,45 +1,10 @@
+import { templateCatalog } from "@/components/templates/catalog";
 import type { TemplatePreview } from "@/lib/types";
 
 /**
- * Static catalogue of the four flagship templates. Phase 4 replaces this
- * with real template components; Phase 1 only needs the metadata to render
- * the showcase honestly.
+ * Catalogue shown on `/template` and the marketing showcase. Derived from the
+ * template registry so a new design can never be missing from the catalogue.
  */
-export const templatePreviews: TemplatePreview[] = [
-  {
-    slug: "wedding-classic",
-    name: "Wedding Classic",
-    category: "Pernikahan",
-    description:
-      "Elegan dan romantis dengan nuansa ivory, aksen champagne, dan ornamen floral yang halus.",
-    isPremium: false,
-    palette: "Ivory & Champagne",
-  },
-  {
-    slug: "birthday-celebration",
-    name: "Birthday Celebration",
-    category: "Ulang Tahun",
-    description:
-      "Ceria dan berenergi dengan warna cerah, tipografi dinamis, dan animasi confetti.",
-    isPremium: false,
-    palette: "Warna Cerah & Ceria",
-  },
-  {
-    slug: "baby-shower",
-    name: "Baby Shower",
-    category: "Baby Shower",
-    description:
-      "Lembut dan hangat dengan pastel biru dan pink, ilustrasi ramah, serta animasi yang lembut.",
-    isPremium: true,
-    palette: "Pastel Blue & Pink",
-  },
-  {
-    slug: "graduation-modern",
-    name: "Graduation Modern",
-    category: "Wisuda",
-    description:
-      "Premium dan tegas dengan latar hitam, aksen emas, tipografi modern, dan animasi reveal bertipe mask wipe.",
-    isPremium: true,
-    palette: "Hitam & Emas",
-  },
-];
+export const templatePreviews: TemplatePreview[] = templateCatalog;
+
+export { templateCatalog };

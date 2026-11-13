@@ -42,7 +42,7 @@ export default async function HomePage() {
       <main>
         <Hero />
         <Features />
-        <TemplateShowcase templates={templatePreviews} />
+        <TemplateShowcase templates={templatePreviews} limit={6} />
         <HowItWorks />
         <Pricing plans={plans} />
         <CtaBanner />

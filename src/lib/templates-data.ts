@@ -22,7 +22,18 @@ export interface TemplateData {
   city?: string;
   coverImage?: string | null;
   eventType?: string;
+  /** Optional digital-envelope details from `template_data`. */
+  gift?: { bank: string; account: string; holder: string };
+  /** Optional short story/quote shown by some templates. */
+  quote?: string;
 }
+
+/** Guestbook entry as rendered inside an invitation. */
+export interface GuestbookMessage {
+  name: string;
+  content: string;
+}
+
 
 function parseGallery(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
@@ -95,5 +106,17 @@ export function eventToTemplateData(event: EventRow): TemplateData {
     city: event.city ?? undefined,
     coverImage: event.cover_image,
     eventType: event.event_type ?? "wedding",
+    gift: parseGift(stored.gift),
+    quote: typeof stored.quote === "string" ? stored.quote : undefined,
   };
+}
+
+/** Digital-envelope details are free-form JSON on the event row. */
+function parseGift(value: unknown): TemplateData["gift"] {
+  if (!value || typeof value !== "object") return undefined;
+  const gift = value as Record<string, unknown>;
+  const bank = typeof gift.bank === "string" ? gift.bank : "";
+  const account = typeof gift.account === "string" ? gift.account : "";
+  const holder = typeof gift.holder === "string" ? gift.holder : "";
+  return bank && account ? { bank, account, holder } : undefined;
 }

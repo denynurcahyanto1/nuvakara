@@ -1,16 +1,53 @@
-import { getRenderer, registry } from '../../src/components/templates/registry';
-import React from 'react';
+import { describe, expect, test } from "vitest";
+import {
+  TEMPLATE_ALIASES,
+  getRenderer,
+  getTemplate,
+  registry,
+  resolveTemplateSlug,
+} from "@/components/templates/registry";
 
-describe('Template Registry', () => {
-  it('should return FallbackRenderer for unknown slug', () => {
-    const renderer = getRenderer('unknown');
-    expect(renderer).toBeDefined();
-    // Test that it renders without crashing
-    const component = React.createElement(renderer, { data: {} });
-    expect(component).toBeDefined();
+describe("Template Registry", () => {
+  test("registers one design per category", () => {
+    const entries = Object.values(registry);
+    expect(entries).toHaveLength(10);
+    expect(new Set(entries.map((entry) => entry.category)).size).toBe(10);
+    for (const entry of entries) {
+      expect(entry.name, entry.slug).toBeTruthy();
+      expect(entry.palette, entry.slug).toBeTruthy();
+      expect(entry.description, entry.slug).toBeTruthy();
+      expect(entry.eventFit.length, entry.slug).toBeGreaterThan(0);
+      expect(entry.renderer, entry.slug).toBeTypeOf("function");
+    }
   });
 
-  it('should have 4 templates in registry', () => {
-    expect(Object.keys(registry)).toHaveLength(4);
+  test("exposes tiers and event fit for the catalogue filters", () => {
+    const tiers = new Set(Object.values(registry).map((entry) => entry.tier));
+    expect(tiers).toEqual(new Set(["Basic", "Premium", "Eksklusif", "Luxury"]));
+    for (const entry of Object.values(registry)) {
+      expect(["wedding", "other"]).toContain(entry.eventFit[0]);
+      expect(entry.isPremium).toBe(entry.tier !== "Basic");
+    }
+  });
+
+  test("legacy event slugs resolve to the new designs", () => {
+    expect(TEMPLATE_ALIASES).toEqual({
+      "wedding-classic": "floral-ivory",
+      "birthday-celebration": "fleksibel-cerita",
+      "baby-shower": "minimalis-lumen",
+      "graduation-modern": "dark-noir",
+    });
+
+    for (const [legacy, canonical] of Object.entries(TEMPLATE_ALIASES)) {
+      expect(resolveTemplateSlug(legacy)).toBe(canonical);
+      expect(getTemplate(legacy)?.slug).toBe(canonical);
+      expect(getRenderer(legacy)).toBe(registry[canonical].renderer);
+    }
+  });
+
+  test("unknown slugs fall back without throwing", () => {
+    expect(resolveTemplateSlug("unknown")).toBeNull();
+    expect(getTemplate("unknown")).toBeNull();
+    expect(getRenderer("unknown")).toBeTypeOf("function");
   });
 });

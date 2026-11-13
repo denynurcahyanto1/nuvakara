@@ -8,8 +8,9 @@ interface MapEmbedProps {
   venue?: string;
   address?: string;
   city?: string;
-  /** Matches the surrounding invitation palette. */
+  /** Kept for template compatibility; colours come from the theme tokens. */
   tone?: "light" | "dark";
+  className?: string;
 }
 
 /** Strips the embed-only flag so the same URL can open in a normal tab. */
@@ -31,6 +32,7 @@ export const MapEmbed: React.FC<MapEmbedProps> = ({
   address,
   city,
   tone = "light",
+  className,
 }) => {
   const lines = [address, city].filter(Boolean).join(", ");
   const query = [venue, address, city].filter(Boolean).join(", ");
@@ -39,11 +41,20 @@ export const MapEmbed: React.FC<MapEmbedProps> = ({
     (query
       ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
       : toExternalUrl(url));
-  const dark = tone === "dark";
 
   return (
-    <figure className="w-full">
-      <div className={cn("h-64 w-full", dark ? "bg-[#17181A]" : "bg-[#E8E1D3]")}>
+    <figure
+      className={cn(
+        "w-full overflow-hidden rounded-[var(--inv-radius)] border border-[var(--inv-line)]",
+        className,
+      )}
+    >
+      <div
+        className={cn(
+          "h-64 w-full",
+          tone === "dark" ? "bg-[#101114]" : "bg-[var(--inv-accent-soft)]",
+        )}
+      >
         <iframe
           src={url}
           width="100%"
@@ -56,44 +67,22 @@ export const MapEmbed: React.FC<MapEmbedProps> = ({
         />
       </div>
 
-      <figcaption
-        className={cn(
-          "flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-left",
-          dark ? "bg-[#111214]" : "bg-[#FBF7F0]",
-        )}
-      >
+      <figcaption className="flex flex-wrap items-center justify-between gap-3 bg-[var(--inv-surface)] px-4 py-3 text-left">
         <div className="min-w-0">
           {venue ? (
-            <p
-              className={cn(
-                "truncate font-serif text-base",
-                dark ? "text-[#F3F4F6]" : "text-[#141C2B]",
-              )}
-            >
+            <p className="truncate font-inv-display text-base text-[var(--inv-ink)]">
               {venue}
             </p>
           ) : null}
           {lines ? (
-            <p
-              className={cn(
-                "truncate text-xs",
-                dark ? "text-[#F3F4F6]/55" : "text-[#141C2B]/60",
-              )}
-            >
-              {lines}
-            </p>
+            <p className="truncate text-xs text-[var(--inv-muted)]">{lines}</p>
           ) : null}
         </div>
         <a
           href={externalUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className={cn(
-            "shrink-0 rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] transition",
-            dark
-              ? "border-[#E5A93C]/50 text-[#E5A93C] hover:bg-[#E5A93C]/15"
-              : "border-[#C6A15B]/50 text-[#7D5F28] hover:bg-[#C6A15B]/15",
-          )}
+          className="shrink-0 rounded-full border border-[var(--inv-accent)] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--inv-accent)] transition hover:bg-[var(--inv-accent-soft)]"
         >
           Buka di Google Maps
         </a>
