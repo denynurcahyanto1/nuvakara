@@ -111,6 +111,12 @@ export default async function InvitationsPage() {
                     <td className="p-4 text-right">
                       <div className="flex items-center justify-end gap-2">
                         <Link
+                          href={`/dashboard/invitations/${event.id}/guests`}
+                          className="text-sm font-medium text-navy hover:text-gold-deep underline underline-offset-2"
+                        >
+                          Tamu
+                        </Link>
+                        <Link
                           href={`/dashboard/invitations/${event.id}/edit`}
                           className="text-sm font-medium text-navy hover:text-gold-deep underline underline-offset-2"
                         >
