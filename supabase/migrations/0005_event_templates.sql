@@ -1,0 +1,3 @@
+ALTER TABLE events ADD COLUMN IF NOT EXISTS template_slug VARCHAR(100) DEFAULT 'wedding-classic';
+ALTER TABLE events ADD COLUMN IF NOT EXISTS template_data JSONB DEFAULT '{}'::jsonb;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS cover_image VARCHAR(500);
