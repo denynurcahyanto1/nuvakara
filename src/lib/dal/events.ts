@@ -227,3 +227,21 @@ export async function createGuestbookMessage(
   if (error) return null;
   return data;
 }
+
+/** Get total visitor count for an event. */
+export async function getVisitorCount(eventId: number): Promise<number> {
+  let supabase;
+  try {
+    supabase = await createClient();
+  } catch {
+    return 0;
+  }
+
+  const { count, error } = await supabase
+    .from("event_visits")
+    .select("*", { count: "exact", head: true })
+    .eq("event_id", eventId);
+
+  if (error) return 0;
+  return count ?? 0;
+}

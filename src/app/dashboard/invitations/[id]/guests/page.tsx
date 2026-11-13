@@ -1,6 +1,7 @@
-import { getEventById, getRSVPs } from "@/lib/dal/events";
+import { getEventById, getRSVPs, getVisitorCount } from "@/lib/dal/events";
 import { GuestTable } from "@/components/dashboard/GuestTable";
 import { StatsCard } from "@/components/dashboard/StatsCard";
+import { VisitorStats } from "@/components/dashboard/VisitorStats";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
@@ -17,7 +18,10 @@ export default async function GuestsPage({ params }: PageProps) {
   const event = await getEventById(eventId);
   if (!event) notFound();
 
-  const rsvps = await getRSVPs(eventId);
+  const [rsvps, visitorCount] = await Promise.all([
+    getRSVPs(eventId),
+    getVisitorCount(eventId),
+  ]);
 
   const total = rsvps.length;
   const hadir = rsvps.filter((r) => r.attendance).length;
@@ -40,7 +44,10 @@ export default async function GuestsPage({ params }: PageProps) {
         </div>
       </div>
 
-      <StatsCard total={total} hadir={hadir} tidakHadir={tidakHadir} />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <StatsCard total={total} hadir={hadir} tidakHadir={tidakHadir} />
+        <VisitorStats count={visitorCount} />
+      </div>
 
       <GuestTable initialGuests={rsvps} eventId={eventId} />
     </div>
