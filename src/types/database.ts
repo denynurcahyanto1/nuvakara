@@ -47,7 +47,7 @@ isOneToOne: false
                   ]
                 },"events": {
                   Row: {
-                    "created_at": string | null,"cover_image": string | null,"description": string | null,"id": number,"is_active": boolean | null,"is_published": boolean | null,"name": string,"owner_id": string,"slug": string,"template_data": Json | null,"template_slug": string | null,"updated_at": string | null
+                    "created_at": string | null,"description": string | null,"id": number,"is_active": boolean | null,"is_published": boolean | null,"name": string,"owner_id": string,"slug": string,"updated_at": string | null
                   }
                   ComputedFields: never
                   Insert: {
@@ -58,6 +58,26 @@ isOneToOne: false
                   }
                   Relationships: [
                     
+                  ]
+                },"guestbook_messages": {
+                  Row: {
+                    "content": string,"created_at": string | null,"event_id": number,"id": number,"name": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "content": string,"created_at"?: string | null,"event_id": number,"id"?: number,"name": string
+                  }
+                  Update: {
+                    "content"?: string,"created_at"?: string | null,"event_id"?: number,"id"?: number,"name"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "guestbook_messages_event_id_fkey"
+      columns: ["event_id"]
+isOneToOne: false
+      referencedRelation: "events"
+      referencedColumns: ["id"]
+    }
                   ]
                 },"pricing_plans": {
                   Row: {
@@ -86,6 +106,26 @@ isOneToOne: false
                   }
                   Relationships: [
                     
+                  ]
+                },"rsvps": {
+                  Row: {
+                    "attendance": boolean,"created_at": string | null,"event_id": number,"id": number,"message": string | null,"name": string,"updated_at": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "attendance"?: boolean,"created_at"?: string | null,"event_id": number,"id"?: number,"message"?: string | null,"name": string,"updated_at"?: string | null
+                  }
+                  Update: {
+                    "attendance"?: boolean,"created_at"?: string | null,"event_id"?: number,"id"?: number,"message"?: string | null,"name"?: string,"updated_at"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "rsvps_event_id_fkey"
+      columns: ["event_id"]
+isOneToOne: false
+      referencedRelation: "events"
+      referencedColumns: ["id"]
+    }
                   ]
                 },"schema_migrations": {
                   Row: {
