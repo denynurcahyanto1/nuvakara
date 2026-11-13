@@ -12,6 +12,8 @@ export interface TemplateData {
   description: string;
   venue: string;
   mapUrl?: string;
+  /** Human-facing Google Maps link (share link or search query). */
+  mapsLink?: string;
   musicUrl?: string;
   images: string[];
   host?: string;
@@ -30,6 +32,11 @@ function parseGallery(value: unknown): string[] {
 /** Google Maps embed URL without an API key. */
 function mapsEmbedUrl(query: string): string {
   return `https://maps.google.com/maps?q=${encodeURIComponent(query)}&output=embed`;
+}
+
+/** Only embed-ready URLs may be used as the iframe src. */
+function isEmbeddable(url: string): boolean {
+  return /output=embed|google\.[a-z.]+\/maps\/embed/i.test(url);
 }
 
 /**
@@ -59,6 +66,16 @@ export function eventToTemplateData(event: EventRow): TemplateData {
     ...gallery.filter((src) => src !== event.cover_image),
   ];
 
+  // A pasted share link (maps.app.goo.gl/…) cannot be used inside an iframe, so
+  // build the embed from the address and keep the pasted link for the button.
+  const explicitMap = (stored.mapUrl as string) || event.maps_url || undefined;
+  const embedUrl =
+    explicitMap && isEmbeddable(explicitMap)
+      ? explicitMap
+      : addressQuery
+        ? mapsEmbedUrl(addressQuery)
+        : explicitMap;
+
   return {
     title: (stored.title as string) ?? coupleTitle,
     date:
@@ -68,10 +85,8 @@ export function eventToTemplateData(event: EventRow): TemplateData {
       new Date().toISOString(),
     description: (stored.description as string) ?? event.description ?? "",
     venue: (stored.venue as string) ?? venueParts.join(", "),
-    mapUrl:
-      (stored.mapUrl as string) ??
-      event.maps_url ??
-      (addressQuery ? mapsEmbedUrl(addressQuery) : undefined),
+    mapUrl: embedUrl,
+    mapsLink: event.maps_url ?? explicitMap,
     musicUrl: (stored.musicUrl as string) ?? event.music_url ?? undefined,
     images,
     host,

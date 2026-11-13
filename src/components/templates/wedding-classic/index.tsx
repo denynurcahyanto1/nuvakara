@@ -14,6 +14,7 @@ export const WeddingClassic: React.FC<TemplateComponentProps> = ({ data }) => {
   const address = (data.address as string) || '';
   const city = (data.city as string) || '';
   const mapUrl = (data.mapUrl as string) || 'https://maps.google.com';
+  const mapsLink = data.mapsLink as string | undefined;
   const musicUrl = data.musicUrl as string;
   const images = (data.images as string[]) || [];
 
@@ -61,7 +62,7 @@ export const WeddingClassic: React.FC<TemplateComponentProps> = ({ data }) => {
           <section className="space-y-6">
             <h2 className="text-2xl md:text-3xl font-normal text-center text-[#D4AF37] tracking-wider uppercase">Location</h2>
             <div className="rounded-xl overflow-hidden border border-[#D4AF37]/30 shadow-md">
-              <MapEmbed url={mapUrl} venue={venue} address={address} city={city} />
+              <MapEmbed url={mapUrl} href={mapsLink} venue={venue} address={address} city={city} />
             </div>
           </section>
         )}

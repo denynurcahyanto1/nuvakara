@@ -22,6 +22,9 @@ if (urls.length === 0) {
 
 const OUT_DIR = ".audit";
 const LABEL = process.env.AUDIT_LABEL?.trim();
+const VIEWPORT = process.env.AUDIT_VIEWPORT?.trim() || "1280x900";
+const FULL_PAGE = process.env.AUDIT_FULL_PAGE !== "0";
+const SCROLL_Y = Number(process.env.AUDIT_SCROLL_Y || 0);
 mkdirSync(OUT_DIR, { recursive: true });
 
 const child = spawn(
@@ -31,7 +34,7 @@ const child = spawn(
     "chrome-devtools-mcp@latest",
     "--headless",
     "--isolated",
-    "--viewport=1280x900",
+    `--viewport=${VIEWPORT}`,
     "--screenshotMaxWidth=1100",
     "--no-page-id-routing",
   ],
@@ -232,7 +235,13 @@ try {
     }
 
     try {
-      const shot = await callTool("take_screenshot", { fullPage: true });
+      if (SCROLL_Y > 0) {
+        await callTool("evaluate_script", {
+          function: `() => { window.scrollTo(0, ${SCROLL_Y}); return window.scrollY; }`,
+        });
+        await sleep(600);
+      }
+      const shot = await callTool("take_screenshot", { fullPage: FULL_PAGE });
       const b64 = imageOf(shot);
       if (b64) {
         const file = `${OUT_DIR}/${LABEL ? `${LABEL}-` : ""}${slugify(url)}.png`;

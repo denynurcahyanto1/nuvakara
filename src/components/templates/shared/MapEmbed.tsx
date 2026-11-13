@@ -2,6 +2,8 @@ import React from "react";
 
 interface MapEmbedProps {
   url: string;
+  /** Preferred link for the button (e.g. the owner's pasted Maps link). */
+  href?: string;
   venue?: string;
   address?: string;
   city?: string;
@@ -21,15 +23,18 @@ function toExternalUrl(url: string): string {
  */
 export const MapEmbed: React.FC<MapEmbedProps> = ({
   url,
+  href,
   venue,
   address,
   city,
 }) => {
   const lines = [address, city].filter(Boolean).join(", ");
   const query = [venue, address, city].filter(Boolean).join(", ");
-  const externalUrl = query
-    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
-    : toExternalUrl(url);
+  const externalUrl =
+    href ||
+    (query
+      ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
+      : toExternalUrl(url));
 
   return (
     <figure className="w-full">
