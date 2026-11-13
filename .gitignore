@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# audit artifacts (screenshots + reports from scripts/mcp-audit.mjs)
+/.audit/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

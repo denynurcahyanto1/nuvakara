@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/dal/auth";
 import { slugify } from "@/lib/utils";
+import { eventInputToIsoString } from "@/lib/datetime";
 import type { Database } from "@/types/database";
 
 type EventInsert = Database["public"]["Tables"]["events"]["Insert"];
@@ -67,6 +68,17 @@ export async function updateEventAction(id: number, formData: FormData) {
     name: formData.get("name") as string,
     slug: slugify(formData.get("slug") as string),
     description: (formData.get("description") as string) || null,
+    event_type: (formData.get("event_type") as string) || "wedding",
+    host_name: (formData.get("host_name") as string) || null,
+    partner_name: (formData.get("partner_name") as string) || null,
+    event_date: eventInputToIsoString(formData.get("event_date") as string),
+    venue_name: (formData.get("venue_name") as string) || null,
+    venue_address: (formData.get("venue_address") as string) || null,
+    city: (formData.get("city") as string) || null,
+    maps_url: (formData.get("maps_url") as string) || null,
+    music_url: (formData.get("music_url") as string) || null,
+    cover_image: (formData.get("cover_image") as string) || null,
+    template_slug: (formData.get("template_slug") as string) || "wedding-classic",
     is_published: formData.get("is_published") === "on",
     updated_at: new Date().toISOString(),
   };

@@ -47,14 +47,14 @@ isOneToOne: false
                   ]
                 },"events": {
                   Row: {
-                    "cover_image": string | null,"created_at": string | null,"description": string | null,"id": number,"is_active": boolean | null,"is_published": boolean | null,"name": string,"owner_id": string,"slug": string,"template_data": Json | null,"template_slug": string | null,"updated_at": string | null
+                    "city": string | null,"cover_image": string | null,"created_at": string | null,"description": string | null,"event_date": string | null,"event_type": string | null,"gallery_urls": Json | null,"host_name": string | null,"id": number,"is_active": boolean | null,"is_published": boolean | null,"maps_url": string | null,"music_url": string | null,"name": string,"owner_id": string,"partner_name": string | null,"slug": string,"template_data": Json | null,"template_slug": string | null,"updated_at": string | null,"venue_address": string | null,"venue_name": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "cover_image"?: string | null,"created_at"?: string | null,"description"?: string | null,"id"?: number,"is_active"?: boolean | null,"is_published"?: boolean | null,"name": string,"owner_id": string,"slug": string,"template_data"?: Json | null,"template_slug"?: string | null,"updated_at"?: string | null
+                    "city"?: string | null,"cover_image"?: string | null,"created_at"?: string | null,"description"?: string | null,"event_date"?: string | null,"event_type"?: string | null,"gallery_urls"?: Json | null,"host_name"?: string | null,"id"?: number,"is_active"?: boolean | null,"is_published"?: boolean | null,"maps_url"?: string | null,"music_url"?: string | null,"name": string,"owner_id": string,"partner_name"?: string | null,"slug": string,"template_data"?: Json | null,"template_slug"?: string | null,"updated_at"?: string | null,"venue_address"?: string | null,"venue_name"?: string | null
                   }
                   Update: {
-                    "cover_image"?: string | null,"created_at"?: string | null,"description"?: string | null,"id"?: number,"is_active"?: boolean | null,"is_published"?: boolean | null,"name"?: string,"owner_id"?: string,"slug"?: string,"template_data"?: Json | null,"template_slug"?: string | null,"updated_at"?: string | null
+                    "city"?: string | null,"cover_image"?: string | null,"created_at"?: string | null,"description"?: string | null,"event_date"?: string | null,"event_type"?: string | null,"gallery_urls"?: Json | null,"host_name"?: string | null,"id"?: number,"is_active"?: boolean | null,"is_published"?: boolean | null,"maps_url"?: string | null,"music_url"?: string | null,"name"?: string,"owner_id"?: string,"partner_name"?: string | null,"slug"?: string,"template_data"?: Json | null,"template_slug"?: string | null,"updated_at"?: string | null,"venue_address"?: string | null,"venue_name"?: string | null
                   }
                   Relationships: [
                     

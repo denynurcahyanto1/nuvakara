@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -102,7 +102,7 @@ export function Navbar() {
           >
             Login
           </Link>
-          <Button href="/daftar" size="sm">
+          <Button href="/register" size="sm">
             Buat Undangan
           </Button>
         </div>
@@ -156,7 +156,7 @@ export function Navbar() {
           </ul>
 
           <div className="mt-8 flex flex-col gap-3">
-            <Button href="/daftar" size="lg" className="w-full">
+            <Button href="/register" size="lg" className="w-full">
               Buat Undangan
             </Button>
             <Button href="/login" variant="ghost" size="lg" className="w-full">

@@ -32,7 +32,7 @@ describe("TemplateShowcase", () => {
     render(<TemplateShowcase templates={templatePreviews} />);
     expect(
       screen.getAllByRole("link", { name: /gunakan template/i })[0],
-    ).toHaveAttribute("href", "/daftar?template=wedding-classic");
+    ).toHaveAttribute("href", "/register?template=wedding-classic");
   });
 });
 

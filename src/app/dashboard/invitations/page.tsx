@@ -2,8 +2,11 @@ import { requireUser } from "@/lib/dal/auth";
 import { getEventsByOwner } from "@/lib/dal/events";
 import Link from "next/link";
 import { publishEventAction, unpublishEventAction, deleteEventAction, duplicateEventAction } from "@/lib/actions/events";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = { title: "Undangan Saya" };
 
 export default async function InvitationsPage() {
   const profile = await requireUser();

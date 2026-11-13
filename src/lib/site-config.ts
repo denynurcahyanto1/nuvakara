@@ -1,4 +1,4 @@
-import type { Feature, NavLink } from "@/lib/types";
+﻿import type { Feature, NavLink } from "@/lib/types";
 
 /**
  * Single source of truth for brand identity and marketing copy.
@@ -28,7 +28,7 @@ export const siteConfig = {
       id: "premium-templates",
       title: "Berbagai template premium",
       description:
-        "Empat template dengan karakter visual berbeda — elegan, meriah, lembut, dan modern.",
+        "Empat template dengan karakter visual berbeda â€” elegan, meriah, lembut, dan modern.",
       icon: "templates",
     },
     {
@@ -125,7 +125,7 @@ export const siteConfig = {
           { label: "Fitur", href: "/#fitur" },
           { label: "Template", href: "/#template" },
           { label: "Harga", href: "/#harga" },
-          { label: "Buat Undangan", href: "/daftar" },
+          { label: "Buat Undangan", href: "/register" },
         ],
       },
       {

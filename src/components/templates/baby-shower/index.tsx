@@ -4,12 +4,15 @@ import { Countdown } from '../shared/Countdown';
 import { Gallery } from '../shared/Gallery';
 import { MapEmbed } from '../shared/MapEmbed';
 import { MusicPlayer } from '../shared/MusicPlayer';
+import { formatEventDate } from '@/lib/datetime';
 
 export const BabyShower: React.FC<TemplateComponentProps> = ({ data }) => {
   const title = (data.title as string) || 'A Sweet Baby is on the Way!';
   const date = (data.date as string) || '2026-12-31T14:00:00';
   const description = (data.description as string) || 'Join us to celebrate the upcoming arrival of our little bundle of joy.';
   const venue = (data.venue as string) || 'Sweet Garden Cafe';
+  const address = (data.address as string) || '';
+  const city = (data.city as string) || '';
   const mapUrl = (data.mapUrl as string) || 'https://maps.google.com';
   const musicUrl = data.musicUrl as string;
   const images = (data.images as string[]) || [];
@@ -38,7 +41,7 @@ export const BabyShower: React.FC<TemplateComponentProps> = ({ data }) => {
         <section className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 text-center space-y-3">
           <h2 className="text-xl md:text-2xl font-normal text-emerald-800">Date & Location</h2>
           <p className="text-lg text-slate-700">
-            {new Date(date).toLocaleDateString('id-ID', { dateStyle: 'full' })}
+            {formatEventDate(date)}
           </p>
           <p className="text-sm text-slate-500">{venue}</p>
         </section>
@@ -58,7 +61,7 @@ export const BabyShower: React.FC<TemplateComponentProps> = ({ data }) => {
           <section className="space-y-6">
             <h2 className="text-xl md:text-2xl font-normal text-center text-slate-800">How to Get There</h2>
             <div className="rounded-3xl overflow-hidden border border-slate-200 shadow-sm">
-              <MapEmbed url={mapUrl} />
+              <MapEmbed url={mapUrl} venue={venue} address={address} city={city} />
             </div>
           </section>
         )}

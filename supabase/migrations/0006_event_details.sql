@@ -1,0 +1,11 @@
+-- Event detail fields used by the public invitation templates.
+ALTER TABLE events ADD COLUMN IF NOT EXISTS event_type TEXT DEFAULT 'wedding';
+ALTER TABLE events ADD COLUMN IF NOT EXISTS host_name TEXT;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS partner_name TEXT;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS event_date TIMESTAMPTZ;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS venue_name TEXT;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS venue_address TEXT;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS city TEXT;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS maps_url TEXT;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS music_url TEXT;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS gallery_urls JSONB DEFAULT '[]'::jsonb;

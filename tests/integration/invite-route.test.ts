@@ -7,6 +7,8 @@ import { requireUser } from '@/lib/dal/auth';
 vi.mock('@/lib/dal/events', () => ({
   getEventBySlug: vi.fn(),
   getEventById: vi.fn(),
+  getRSVPs: vi.fn().mockResolvedValue([]),
+  getGuestbook: vi.fn().mockResolvedValue([]),
 }));
 
 vi.mock('next/navigation', () => ({

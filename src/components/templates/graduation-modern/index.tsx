@@ -4,12 +4,15 @@ import { Countdown } from '../shared/Countdown';
 import { Gallery } from '../shared/Gallery';
 import { MapEmbed } from '../shared/MapEmbed';
 import { MusicPlayer } from '../shared/MusicPlayer';
+import { formatEventDate } from '@/lib/datetime';
 
 export const GraduationModern: React.FC<TemplateComponentProps> = ({ data }) => {
   const title = (data.title as string) || 'Graduation Commencement 2026';
   const date = (data.date as string) || '2026-12-31T09:00:00';
   const description = (data.description as string) || 'Honoring the achievement, resilience, and success of the Class of 2026.';
   const venue = (data.venue as string) || 'Auditorium Magna, University Hall';
+  const address = (data.address as string) || '';
+  const city = (data.city as string) || '';
   const mapUrl = (data.mapUrl as string) || 'https://maps.google.com';
   const musicUrl = data.musicUrl as string;
   const images = (data.images as string[]) || [];
@@ -38,7 +41,7 @@ export const GraduationModern: React.FC<TemplateComponentProps> = ({ data }) => 
         <section className="border border-neutral-800 bg-neutral-900/40 p-8 rounded-2xl text-center space-y-4">
           <h2 className="text-sm font-semibold tracking-widest text-[#E5A93C] uppercase">Schedule & Venue</h2>
           <p className="text-2xl font-bold text-white">
-            {new Date(date).toLocaleDateString('id-ID', { dateStyle: 'full' })}
+            {formatEventDate(date)}
           </p>
           <p className="text-neutral-400 text-base">{venue}</p>
         </section>
@@ -58,7 +61,7 @@ export const GraduationModern: React.FC<TemplateComponentProps> = ({ data }) => 
           <section className="space-y-6">
             <h2 className="text-sm font-semibold tracking-widest text-[#E5A93C] uppercase text-center">Location & Access</h2>
             <div className="rounded-2xl overflow-hidden border border-neutral-800 shadow-2xl">
-              <MapEmbed url={mapUrl} />
+              <MapEmbed url={mapUrl} venue={venue} address={address} city={city} />
             </div>
           </section>
         )}

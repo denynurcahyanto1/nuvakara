@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion";
 import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -66,7 +66,7 @@ export function Pricing({ plans }: PricingProps) {
                     </ul>
 
                     <Link
-                      href="/daftar"
+                      href="/register"
                       className="mt-6 inline-flex h-11 items-center justify-center rounded-full bg-navy px-5 text-sm font-medium text-ivory transition-colors hover:bg-navy-soft"
                     >
                       Pilih Paket
@@ -77,7 +77,7 @@ export function Pricing({ plans }: PricingProps) {
             </Stagger>
 
             <p className="mt-6 text-center text-xs text-slate-600">
-              Pembayaran belum tersedia — paket yang dipilih langsung aktif tanpa
+              Pembayaran belum tersedia â€” paket yang dipilih langsung aktif tanpa
               transaksi apa pun.
             </p>
           </>

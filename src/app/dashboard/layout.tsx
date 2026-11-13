@@ -1,6 +1,12 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { Logo } from "@/components/ui/Logo";
 import { requireUser } from "@/lib/dal/auth";
+
+export const metadata: Metadata = {
+  title: { default: "Dasbor", template: "%s | NUVAKARA" },
+  robots: { index: false, follow: false },
+};
 
 /**
  * Every dashboard route passes through here, so the guard is written once.

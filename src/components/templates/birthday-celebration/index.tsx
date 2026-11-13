@@ -4,12 +4,15 @@ import { Countdown } from '../shared/Countdown';
 import { Gallery } from '../shared/Gallery';
 import { MapEmbed } from '../shared/MapEmbed';
 import { MusicPlayer } from '../shared/MusicPlayer';
+import { formatEventDate } from '@/lib/datetime';
 
 export const BirthdayCelebration: React.FC<TemplateComponentProps> = ({ data }) => {
   const title = (data.title as string) || "Let's Celebrate!";
   const date = (data.date as string) || '2026-12-31T18:00:00';
   const description = (data.description as string) || "You're invited to my birthday bash! Come join the fun!";
   const venue = (data.venue as string) || 'Fun World Center';
+  const address = (data.address as string) || '';
+  const city = (data.city as string) || '';
   const mapUrl = (data.mapUrl as string) || 'https://maps.google.com';
   const musicUrl = data.musicUrl as string;
   const images = (data.images as string[]) || [];
@@ -38,7 +41,7 @@ export const BirthdayCelebration: React.FC<TemplateComponentProps> = ({ data }) 
         <section className="bg-white rounded-3xl p-8 shadow-sm border border-purple-100 text-center space-y-4">
           <h2 className="text-2xl md:text-3xl font-extrabold text-pink-600">When & Where</h2>
           <p className="text-lg font-semibold text-purple-900">
-            {new Date(date).toLocaleDateString('id-ID', { dateStyle: 'full' })}
+            {formatEventDate(date)}
           </p>
           <p className="text-base text-gray-600">{venue}</p>
         </section>
@@ -58,7 +61,7 @@ export const BirthdayCelebration: React.FC<TemplateComponentProps> = ({ data }) 
           <section className="space-y-6">
             <h2 className="text-2xl md:text-3xl font-extrabold text-center text-purple-900">Party Location</h2>
             <div className="rounded-3xl overflow-hidden border-2 border-purple-200 shadow-md">
-              <MapEmbed url={mapUrl} />
+              <MapEmbed url={mapUrl} venue={venue} address={address} city={city} />
             </div>
           </section>
         )}

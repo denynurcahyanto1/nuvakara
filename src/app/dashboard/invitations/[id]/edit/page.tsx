@@ -1,7 +1,10 @@
 import { getEventById } from "@/lib/dal/events";
 import { requireUser } from "@/lib/dal/auth";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { EditEventForm } from "@/components/invitations/EditEventForm";
+
+export const metadata: Metadata = { title: "Edit Undangan" };
 
 interface Props {
   params: Promise<{ id: string }>;

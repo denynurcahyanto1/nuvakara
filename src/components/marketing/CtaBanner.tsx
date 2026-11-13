@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/Button";
+﻿import { Button } from "@/components/ui/Button";
 import { GradientOrb, Reveal } from "@/components/motion";
 
 export function CtaBanner() {
@@ -21,13 +21,13 @@ export function CtaBanner() {
         </Reveal>
         <Reveal delay={0.1}>
           <p className="max-w-xl text-sm text-ivory/70 sm:text-base">
-            Buat akun gratis, pilih template, dan bagikan link ke tamu — dalam
+            Buat akun gratis, pilih template, dan bagikan link ke tamu â€” dalam
             hitungan menit.
           </p>
         </Reveal>
         <Reveal delay={0.2}>
           <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-            <Button href="/daftar" size="lg" className="w-full sm:w-auto">
+            <Button href="/register" size="lg" className="w-full sm:w-auto">
               Buat Undangan
             </Button>
             <Button

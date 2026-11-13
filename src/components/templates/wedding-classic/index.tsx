@@ -4,12 +4,15 @@ import { Countdown } from '../shared/Countdown';
 import { Gallery } from '../shared/Gallery';
 import { MapEmbed } from '../shared/MapEmbed';
 import { MusicPlayer } from '../shared/MusicPlayer';
+import { formatEventDate } from '@/lib/datetime';
 
 export const WeddingClassic: React.FC<TemplateComponentProps> = ({ data }) => {
   const title = (data.title as string) || 'The Wedding of Romeo & Juliet';
   const date = (data.date as string) || '2026-12-31T18:00:00';
   const description = (data.description as string) || 'Together with their families, invite you to celebrate their wedding';
   const venue = (data.venue as string) || 'Grand Ballroom, Jakarta';
+  const address = (data.address as string) || '';
+  const city = (data.city as string) || '';
   const mapUrl = (data.mapUrl as string) || 'https://maps.google.com';
   const musicUrl = data.musicUrl as string;
   const images = (data.images as string[]) || [];
@@ -35,7 +38,7 @@ export const WeddingClassic: React.FC<TemplateComponentProps> = ({ data }) => {
         {/* Event Details */}
         <section className="text-center space-y-4">
           <h2 className="text-2xl md:text-3xl font-normal text-[#D4AF37] tracking-wider uppercase">Event Details</h2>
-          <p className="text-lg text-gray-700">{new Date(date).toLocaleDateString('id-ID', { dateStyle: 'full' })}</p>
+          <p className="text-lg text-gray-700">{formatEventDate(date)}</p>
           <p className="text-base text-gray-600 font-sans">{venue}</p>
         </section>
 
@@ -52,7 +55,7 @@ export const WeddingClassic: React.FC<TemplateComponentProps> = ({ data }) => {
           <section className="space-y-6">
             <h2 className="text-2xl md:text-3xl font-normal text-center text-[#D4AF37] tracking-wider uppercase">Location</h2>
             <div className="rounded-xl overflow-hidden border border-[#D4AF37]/30 shadow-md">
-              <MapEmbed url={mapUrl} />
+              <MapEmbed url={mapUrl} venue={venue} address={address} city={city} />
             </div>
           </section>
         )}

@@ -1,8 +1,11 @@
 import { requireUser } from "@/lib/dal/auth";
 import { getEventsByOwner } from "@/lib/dal/events";
 import { StatCard } from "@/components/dashboard/StatCard";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = { title: "Dasbor" };
 
 export default async function DashboardPage() {
   const profile = await requireUser();

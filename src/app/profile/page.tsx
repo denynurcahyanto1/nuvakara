@@ -7,6 +7,7 @@ import { requireUser } from "@/lib/dal/auth";
 export const metadata: Metadata = {
   title: "Profil Saya",
   description: "Kelola data akun NUVAKARA Anda.",
+  robots: { index: false, follow: false },
 };
 
 export default async function ProfilePage() {

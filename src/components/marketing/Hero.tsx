@@ -1,4 +1,4 @@
-import Image from "next/image";
+﻿import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { FloatingDecor, GradientOrb, Reveal, TextReveal } from "@/components/motion";
 
@@ -40,7 +40,7 @@ export function Hero() {
 
           <Reveal delay={0.25} className="w-full">
             <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-              <Button href="/daftar" size="lg" className="w-full sm:w-auto">
+              <Button href="/register" size="lg" className="w-full sm:w-auto">
                 Mulai Sekarang
               </Button>
               <Button
@@ -77,7 +77,7 @@ export function Hero() {
               <p className="mt-2 font-display text-3xl text-navy">Rafi &amp; Aisyah</p>
               <div className="mt-4 h-px w-full bg-gradient-to-r from-transparent via-gold to-transparent" />
               <p className="mt-4 text-sm text-navy/70">
-                Sabtu, 12 Desember 2026 · 10:00 WIB
+                Sabtu, 12 Desember 2026 Â· 10:00 WIB
               </p>
               <p className="text-sm text-navy/70">Grand Ballroom, Jakarta</p>
             </div>
